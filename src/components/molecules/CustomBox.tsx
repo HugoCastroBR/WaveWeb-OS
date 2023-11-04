@@ -17,6 +17,7 @@ interface CustomBoxProps {
   setMinimized?: (minimized: boolean) => void
   maximized?: boolean,
   setMaximized?: (maximized: boolean) => void
+  resize?: boolean
 }
 const CustomBox = ({
   children,
@@ -30,7 +31,8 @@ const CustomBox = ({
   minimized,
   setMinimized,
   maximized,
-  setMaximized
+  setMaximized,
+  resize
 }:CustomBoxProps) => {
 
 
@@ -43,7 +45,7 @@ const CustomBox = ({
         border-t-2 border-t-gray-100 border-l-2 border-l-gray-100
         border-r-2 border-r-gray-800 border-b-2 border-b-gray-800
         drop-shadow-sm shadow-sm shadow-gray-800 ${className} !overflow-hidden
-        hover:resize 
+        ${resize ? 'hover:resize' : ''}
         ${maximized ? ' !w-full !h-full !top-0 !left-0 cursor-auto' : ''}
         `}
       >

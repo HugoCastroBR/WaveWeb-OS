@@ -65,7 +65,16 @@ const TaskBar = () => {
           <Image width="26" height="26" src="/assets/icons/task-bar-start.png" alt="vaporwave"/>
             Start
         </CustomActionButton>
-        {states.Tasks.MusicTask.isOpen && <TaskBarItem text='Music' onClick={HandlerOnClick}/>}
+        
+        {
+        states.Tasks.MusicTask.isOpen 
+        && 
+        <TaskBarItem 
+        text='Music' 
+        icon={states.Tasks.MusicTask.icon} 
+        onClick={HandlerOnClick}/>
+        }
+
       </div>
       <CustomActionButton className='w-16  h-8 flex justify-center pr-1' >
         {time}

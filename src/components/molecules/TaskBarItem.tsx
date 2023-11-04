@@ -1,5 +1,6 @@
 import React from 'react'
 import CustomActionButton from '../atoms/CustomActionButton'
+import Image from 'next/image'
 
 interface TaskBarItemProps {
   icon?: string
@@ -17,6 +18,7 @@ const TaskBarItem = ({
       onClick={() => onClick && onClick(text)}
     >
       {/* <Image width="26" height="26" src="/assets/icons/task-bar-start.png" alt="vaporwave" /> */}
+      {icon && <Image src={icon} alt={text} width="26" height="26" />}
       {text}
     </CustomActionButton>
   )
