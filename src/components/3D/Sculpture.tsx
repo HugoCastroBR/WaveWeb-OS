@@ -68,9 +68,9 @@ const Sculpture: React.FC = () => {
 
       centerGroup.add(cubeMesh);
 
-      centerGroup.position.set(-5, -1, 0);
-      centerGroup.rotation.set(0, 0.2, -0.03);
-      centerGroup.scale.set(0.07, 0.07, 0.07);
+      centerGroup.position.set(0, -1, 0);
+      centerGroup.rotation.set(0, 0, 0);
+      centerGroup.scale.set(0.08, 0.08, 0.08);
       setSculptureModel(centerGroup);
       setIsLoading(false);
     } catch (error) {

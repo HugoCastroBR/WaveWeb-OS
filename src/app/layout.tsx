@@ -36,7 +36,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} ${bebas_neue.variable} ${syncopate.variable}`}>
+      <body className={`${inter.className} ${bebas_neue.variable} ${syncopate.variable} !overflow-clip`}>
         <Providers>
           {children}
         </Providers>

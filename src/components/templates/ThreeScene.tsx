@@ -13,7 +13,7 @@ const ThreeScene = ({
   withSculpture = true,
 }:ThreeSceneProps) => {
   return (
-    <div className='h-screen w-screen'>
+    <div className='h-screen w-screen overflow-y-hidden'>
       {children}
       <Canvas>
         <Suspense fallback={null}>

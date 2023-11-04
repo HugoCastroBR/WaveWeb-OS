@@ -1,25 +1,100 @@
-import { Container } from "@mantine/core";
-import ThreeScene from "./components/templates/ThreeScene";
-import Scene from "./components/templates/ThreeScene";
-import CustomButton from "./components/atoms/CustomWindowHeaderButton";
-import CustomText from "./components/atoms/CustomText";
-import CustomBox from "./components/organisms/CustomBox";
+'use client'
+import ThreeScene from "../components/templates/ThreeScene";
+import CustomText from "../components/atoms/CustomText";
+import LoginForm from "@/components/organisms/LoginForm";
+import { useState } from "react";
+import RegisterForm from "@/components/organisms/RegisterForm";
+
+
 
 export default function Home() {
+
+  const [isRegisterFormOpen, setIsRegisterFormOpen] = useState(false)
+
+
   return (
-    <main className="overflow-x-hidden">
+    <main className="overflow-hidden">
       <ThreeScene>
-        <div className="absolute  overflow-x-hidden flex flex-col items-end w-full p-12 h-screen">
+        <div className="absolute   overflow-x-hidden flex flex-col items-center w-full p-12 h-screen">
           <CustomText 
-            text="Welcome Friend" 
+            text="Wave OS" 
             className="
-            text-8xl font-bebas bg-gradient-to-tl  pr-8
-            from-pink-500 via-violet-500 to-blue-500
-            text-transparent bg-clip-text
-            drop-shadow-[0_4.0px_0.2px_rgba(0,0,0,0.8)]
+            text-9xl font-bebas text-gray-200 -mt-8
             " 
           />
-          <CustomBox />
+          <CustomText 
+            text="Wave OS" 
+            className="
+            text-9xl font-bebas text-gray-200  -mt-10 mr-48
+            " 
+          />
+          <CustomText 
+            text="Wave OS" 
+            className="
+            text-9xl font-bebas text-gray-200 -mt-10 ml-48
+            " 
+          />
+          <CustomText 
+            text="Wave OS" 
+            className="
+            text-9xl font-bebas text-gray-200  -mt-10 mr-48
+            " 
+          />
+          <CustomText 
+            text="Wave OS" 
+            className="
+            text-9xl font-bebas text-gray-200 -mt-10 ml-48
+            " 
+          />
+          <CustomText 
+            text="Wave OS" 
+            className="
+            text-9xl font-bebas text-gray-200  -mt-10 mr-48
+            " 
+          />
+          <CustomText 
+            text="Wave OS" 
+            className="
+            text-9xl font-bebas text-gray-200 -mt-10 ml-48
+            " 
+          />
+          <CustomText 
+            text="Wave OS" 
+            className="
+            text-9xl font-bebas text-gray-200  -mt-10 mr-48
+            " 
+          />
+          <CustomText 
+            text="Wave OS" 
+            className="
+            text-9xl font-bebas text-gray-200 -mt-10 ml-48
+            " 
+          />
+          <CustomText 
+            text="Wave OS" 
+            className="
+            text-9xl font-bebas text-gray-200 -mt-10
+            " 
+          />
+          {
+            isRegisterFormOpen && (
+              <RegisterForm
+                onSubmit={() => {}}
+                onClosed={() => {
+                  setIsRegisterFormOpen(false)
+                }}
+                closed={!isRegisterFormOpen}
+              />
+            )
+          }
+          <LoginForm
+            onOpenRegisterForm={() => {
+              setIsRegisterFormOpen(true)
+            }}
+            onSubmit={() => {
+              console.log("login")
+            }}
+          />
         </div>
       </ThreeScene>
     </main>
