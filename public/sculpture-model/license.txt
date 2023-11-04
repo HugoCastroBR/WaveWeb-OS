@@ -1,0 +1,11 @@
+Model Information:
+* title:	Greek sculpture scan - Sofokles [Vaporwave]
+* source:	https://sketchfab.com/3d-models/greek-sculpture-scan-sofokles-vaporwave-32fd03fc110342598ae1da23e31afda4
+* author:	marcteuber (https://sketchfab.com/marcteuber)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Greek sculpture scan - Sofokles [Vaporwave]" (https://sketchfab.com/3d-models/greek-sculpture-scan-sofokles-vaporwave-32fd03fc110342598ae1da23e31afda4) by marcteuber (https://sketchfab.com/marcteuber) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

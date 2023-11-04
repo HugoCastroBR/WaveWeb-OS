@@ -1,4 +1,6 @@
 import type { Config } from 'tailwindcss'
+const { iconsPlugin, getIconCollections } = require("@egoist/tailwindcss-icons")
+
 
 const config: Config = {
   content: [
@@ -13,8 +15,16 @@ const config: Config = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      fontFamily: {
+        bebas: ["var(--font-bebas-neue)"],
+        syncopate : ["var(--font-syncopate)"],
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    iconsPlugin({
+      collections: getIconCollections(["mdi"]),
+    })
+  ],
 }
 export default config
