@@ -33,11 +33,11 @@ const CustomBox = ({
   maximized,
   setMaximized,
   resize
-}:CustomBoxProps) => {
+}: CustomBoxProps) => {
 
 
   return (
-    <Draggable handle='.handle' disabled={maximized}  position={maximized ? {x:0,y:0} : undefined} >
+    <Draggable handle='.handle' disabled={maximized} position={maximized ? { x: 0, y: 0 } : undefined} >
       <div
         className={`top-1/4
         bg-gray-300 ${closed && 'hidden'} ${minimized && 'hidden'}
@@ -70,13 +70,13 @@ const CustomBox = ({
                 setMaximized && setMaximized(true)
               }}
             />}
-            {!disableClose && <CustomWindowHeaderButton type='close' onClick={() =>{
+            {!disableClose && <CustomWindowHeaderButton type='close' onClick={() => {
               setClosed && setClosed(true)
-            }}/>}
+            }} />}
           </div>
         </div>
         <div className='p-1 w-full h-full '>
-         {children}
+          {children}
         </div>
       </div>
 

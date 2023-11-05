@@ -4,19 +4,28 @@ interface CustomInputProps {
   className?: string
   label: string
   defaultValue?: string
+  onChange?: (value:string) => void
 }
 
 const CustomInput = ({
   className,
   label,
-  defaultValue
+  defaultValue,
+  onChange
 }:CustomInputProps) => {
   return (
     <>
       <label className="text-base first-letter:underline" htmlFor={`text-input-${label}`}>
         {label}
       </label>
-      <input type="text" id={`text-input-${label}`}
+      <input 
+        onChange={(e) => {
+          if(onChange) {
+            onChange(e.target.value)
+          }
+        }}
+        type="text" 
+        id={`text-input-${label}`}
         defaultValue={defaultValue || ''}
         className={`
         border-2 flex flex-col bg-gray-300 
