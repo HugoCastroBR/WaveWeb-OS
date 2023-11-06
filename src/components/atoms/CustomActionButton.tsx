@@ -70,7 +70,10 @@ const CustomActionButton = ({
       focus:outline-none  
       ${clicked && "border-t-gray-800 border-l-gray-800 border-r-gray-100 border-b-gray-100"}
       `}
-      onClick={HandlerOnClick}
+      onClick={(e) => {
+        e.preventDefault()
+        HandlerOnClick()
+      }}
       >
         {children}
       </button>

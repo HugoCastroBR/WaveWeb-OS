@@ -83,10 +83,10 @@ const MusicApp = () => {
     }
   }, [states.Musics.currentSong])
 
-  useEffect(() => {
-    console.log("now")
-    playAudioFromUrl('/songs/eevee-seeds/sound.mp3' )
-  },[states.Tasks.MusicTask.isMinimized])
+  // useEffect(() => {
+  //   console.log("now")
+  //   playAudioFromUrl('/songs/eevee-seeds/sound.mp3' )
+  // },[states.Tasks.MusicTask.isMinimized])
 
   const handlerSearch = async (value:string) => {
     const res = await searchMusic(value)

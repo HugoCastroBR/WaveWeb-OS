@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect } from 'react'
 import CustomText from '../atoms/CustomText'
 import MusicPlayerList from './MusicPlayerList'
@@ -10,6 +11,8 @@ import useStore from '@/hooks/useStore'
 import { MusicsSetCurrentSong, MusicsSetSongName, MusicsSetArtists, MusicsSetCurrentSongImage, MusicsSetMusicIndex, MusicsSetCurrentSongLength, MusicsSetIsLocal, MusicsSetSongIsPaused, MusicsSetSongIsPlaying } from '@/store/actions'
 import { formatSecondsToMinutes, getMP3Duration } from '@/utils/audio'
 import musics from '../../../public/songs/musics.json'
+import { getMusic, getMusics, uploadMusic, verifyHealth } from '@/api'
+import wait from '@/utils/wait'
 
 
 interface MySongProps {
@@ -37,8 +40,6 @@ const MySong = ({
 
   React.useEffect(() => {
 
-
-
     getMP3Duration(url).then((duration) => {
       setMusicDuration(duration)
     })
@@ -49,8 +50,8 @@ const MySong = ({
   return (
     <div
       className=' 
-        w-full h-28 flex justify-center border border-r-0 border-gray-400 -ml-px
-        cursor-pointer hover:bg-gray-200 duration-200 border-b-0 my-1 overflow-hidden
+        w-full h-28  flex justify-center border border-r-0 border-gray-400 -ml-px
+        cursor-pointer hover:bg-gray-200 duration-200 border-b-0 my-1
         '
       onClick={() => {
         getMP3Duration(url).then((duration) => {
@@ -94,15 +95,85 @@ const MusicPlayerContent = ({
 
   const [search, setSearch] = React.useState('')
 
+  const handlerVerifyApiHealth = async () => {
+    const res = await verifyHealth()
+    console.log(res)
+  }
+
+  const [localMusics, setLocalMusics] = React.useState<getMusic[]>([] as getMusic[])
+  
+
+  const handlerGetLocalMusics = async () => {
+    const res = await getMusics()
+    setLocalMusics(res)
+  }
+  useEffect(() => {
+    handlerGetLocalMusics()
+  },[])
+
+
+
+  const [musicFile, setMusicFile] = React.useState<File | null>(null)
+  const [imageFile, setImageFile] = React.useState<File | null>(null)
+  const [musicName, setMusicName] = React.useState('')
+  const [musicArtist, setMusicArtist] = React.useState('')
+
+  const handlerUploadMusic = async () => {
+    const res = await uploadMusic(musicFile as File, imageFile as File, musicName,musicArtist)
+    await handlerGetLocalMusics()
+  }
+
   return (
     <div className=' w-full h-full flex'>
       <div className='h-full w-5/12 flex flex-col border-r border-gray-400 -mt-1'>
-        <div className='h-1/6 w-full flex justify-center items-center'>
-          <Image src='/assets/icons/music-task.png' width={48} height={48} alt='Spotify' />
+        <div className='h-1/5 w-full flex justify-center items-center'>
+          <form className='flex h-full'>
+            <div className='flex flex-col h-full w-1/2 justify-center'>
+              <CustomInput type='file' label='Upload a song:' className='w-full h-10 flex flex-col' 
+                onChange={(e) => {
+                  setMusicFile(e.target.files?.[0] || null)
+                }}
+              />
+              <CustomInput type='file' label='Upload a image:' className='w-full h-10 flex flex-col'
+                onChange={(e) => {
+                  setImageFile(e.target.files?.[0] || null)
+                }}
+              />
+              </div>
+            <div className='flex flex-col h-full w-1/2 pr-2 justify-center'>
+              <div className='mt-4'>
+                <CustomInput 
+                  label='Song name:' 
+                  className='w-full h-6 flex flex-col' 
+                  onChange={(e) => {
+                    setMusicName(e as string)
+                  }}
+                />
+                <CustomInput 
+                  label='Artist name:' 
+                  className='w-full h-6 flex flex-col' 
+                  onChange={(e) => {
+                    setMusicArtist(e as string)
+                  }}
+                />
+              </div>
+              <div className='mb-2'>
+                <CustomActionButton className='w-20 h-6 mt-2' onClick={() => {
+
+
+                  handlerVerifyApiHealth()
+                  handlerUploadMusic()
+                  wait(1000)
+                  handlerGetLocalMusics()
+
+                }}>Upload</CustomActionButton>
+              </div>
+            </div>
+          </form>
         </div>
         <CustomText text='Full Sounds:' className='text-2xl font-semibold ' />
-        <div className='h-auto  w-full overflow-y-auto flex flex-col'>
-
+        <div className=' w-full overflow-y-scroll flex flex-col'>
+              
           <MySong
             artistName='eevee'
             image='/songs/eevee-seeds/image.jpg'
@@ -110,7 +181,20 @@ const MusicPlayerContent = ({
             url='/songs/eevee-seeds/sound.mp3'
             key={1}
           />
-
+          {
+            localMusics.map((music, index) => {
+              console.log(music)
+              return (
+                <MySong
+                  artistName={music.artist}
+                  image={`/${music.coverUrl}`}
+                  songName={music.title}
+                  url={`/${music.musicUrl}`}
+                  key={index}
+                />
+              )
+            })
+          }
 
 
         </div>
