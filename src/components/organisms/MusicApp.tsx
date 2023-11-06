@@ -102,7 +102,7 @@ const MusicApp = () => {
       tittle='Music'
       className={`
         absolute top-64 left-64 w-3/6 h-5/6 bg-gray-300
-        mb-1
+        my-1
       `}
       closed={!states.Tasks.MusicTask.isOpen}
       minimized={states.Tasks.MusicTask.isMinimized}
@@ -125,11 +125,11 @@ const MusicApp = () => {
       <div className='flex flex-col w-full h-5/6  justify-end 
       
       '>
-        <div className='w-full h-full'>
+        <div className='w-full h-full py-1'>
           <MusicPlayerContent onSearch={handlerSearch} tracksResult={states.Musics.search}/>
         </div>
         <Divider color='gray'/>
-        <div className=' flex h-32 w-full -mb-32 mt-2  '>
+        <div className=' flex h-32 w-full -mb-32 mt-3  '>
           <MusicPlayerBar />
         </div>
       </div>

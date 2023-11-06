@@ -83,17 +83,10 @@ export const MusicsSlice = createSlice({
 			state.search = {} as SpotifySearchMusic
 			state.total = 0
 			state.limit = 0
-			state.currentSong = ""
-			state.currentSongLength = 0
-			state.songName = ""
-			state.songTimer = 0
 			state.songIsPlaying = false
-			state.songIsPaused = false
+			state.songIsPaused = true
 			state.volume = 100
-			state.artists = []
-			state.currentSongImage = ""
 			state.musicIndex = 0
-			state.isLocal = false
 		},
 		SET_MUSIC_INDEX(state,{payload}:{payload:number}){
 			state.musicIndex = payload

@@ -6,7 +6,7 @@ import CustomBox from '../molecules/CustomBox'
 import useStore from '@/hooks/useStore'
 import DesktopIcon from '../molecules/DesktopIcon'
 import TaskBarItem from '../molecules/TaskBarItem'
-import { TasksSetIsMusicTaskOpen, TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskMaximized } from '@/store/actions'
+import { TasksSetIsMusicTaskOpen, TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskMaximized, SetIsStartMenuOpen, TasksSetIsTodoTaskMinimized, TasksSetIsTodoTaskOpen } from '@/store/actions'
 const TaskBar = () => {
 
   const [time, setTime] = React.useState('')
@@ -48,6 +48,15 @@ const TaskBar = () => {
         dispatch(TasksSetIsMusicTaskMinimized(true))
         // dispatch(TasksSetIsMusicTaskMaximized(false))
         break;
+      case 'Todo List':
+        if(states.Tasks.TodoTask.isMinimized) {
+          dispatch(TasksSetIsTodoTaskMinimized(false))
+          break;
+        }
+        dispatch(TasksSetIsTodoTaskOpen(true))
+        dispatch(TasksSetIsTodoTaskMinimized(true))
+        // dispatch(TasksSetIsTodoTaskMaximized(false))
+        break;
       default:
         break;
     }
@@ -61,7 +70,16 @@ const TaskBar = () => {
       justify-between z-30
     '>
       <div className='flex h-full  items-start pb-8'>
-        <CustomActionButton className='w-20 h-8 flex justify-between pr-1' >
+        <CustomActionButton 
+          className='w-20 h-8 flex justify-between pr-1' 
+          onClick={() => {
+            if(states.Tasks.isStartMenuOpen) {
+              dispatch(SetIsStartMenuOpen(false))
+              return
+            }
+            dispatch(SetIsStartMenuOpen(true))
+          }}
+        >
           <Image width="26" height="26" src="/assets/icons/task-bar-start.png" alt="vaporwave"/>
             Start
         </CustomActionButton>
@@ -74,6 +92,15 @@ const TaskBar = () => {
         icon={states.Tasks.MusicTask.icon} 
         onClick={HandlerOnClick}/>
         }
+        {
+        states.Tasks.TodoTask.isOpen
+        &&
+        <TaskBarItem
+        text='Todo List'
+        icon={states.Tasks.TodoTask.icon}
+        onClick={HandlerOnClick} />
+        }
+
 
       </div>
       <CustomActionButton className='w-16  h-8 flex justify-center pr-1' >

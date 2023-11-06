@@ -1,7 +1,8 @@
 
 import { SpotifySearchMusic } from '@/api/spotify';
-import { AppActions,AuthActions,TasksActions,MusicsActions } from './index';
+import { AppActions,AuthActions,TasksActions,MusicsActions, TodoActions } from './index';
 import { AppNotificationType } from './reducers/app';
+import { TodoProps } from './reducers/todo';
 
 
 
@@ -27,6 +28,17 @@ export const TasksSetIsMusicTaskMinimized = (value: boolean) => {
 export const TasksSetIsMusicTaskMaximized = (value: boolean) => {
   return TasksActions.SET_IS_MUSIC_TASK_MAXIMIZED(value)
 }
+
+export const TasksSetIsTodoTaskOpen = (value: boolean) => {
+  return TasksActions.SET_IS_TODO_TASK_OPEN(value)
+}
+export const TasksSetIsTodoTaskMinimized = (value: boolean) => {
+  return TasksActions.SET_IS_TODO_TASK_MINIMIZED(value)
+}
+export const TasksSetIsTodoTaskMaximized = (value: boolean) => {
+  return TasksActions.SET_IS_TODO_TASK_MAXIMIZED(value)
+}
+
 
 export const MusicsSetSearch = (value: SpotifySearchMusic) => {
   return MusicsActions.SET_SEARCH(value)
@@ -72,4 +84,14 @@ export const MusicsSetMusicIndex = (value: number) => {
 }
 export const MusicsSetIsLocal = (value: boolean) => {
   return MusicsActions.SET_IS_LOCAL(value)
+}
+export const SetIsStartMenuOpen = (value: boolean) => {
+  return TasksActions.SET_IS_START_MENU_OPEN(value)
+}
+
+export const TodoSetTodos = (value: TodoProps[]) => {
+  return TodoActions.SET_TODOS(value)
+}
+export const TodoSetCurrentTodo = (value: TodoProps) => {
+  return TodoActions.SET_CURRENT_TODO(value)
 }

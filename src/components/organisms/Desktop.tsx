@@ -2,8 +2,10 @@
 import React from 'react'
 import DesktopIcon from '../molecules/DesktopIcon'
 import useStore from '@/hooks/useStore'
-import { TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskOpen } from '@/store/actions'
+import { TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskOpen, TasksSetIsTodoTaskMinimized, TasksSetIsTodoTaskOpen } from '@/store/actions'
 import MusicApp from './MusicApp'
+import StartMenu from './StartMenu'
+import TodoApp from './TodoApp'
 
 interface DesktopItemProps {
   onClick?: () => void
@@ -21,6 +23,14 @@ const Desktop = () => {
         dispatch(TasksSetIsMusicTaskOpen(true))
         dispatch(TasksSetIsMusicTaskMinimized(false))
       },
+    },
+    {
+      imgSrc: '/assets/icons/todo-task.png',
+      text: 'Todo List',
+      onClick() {
+        dispatch(TasksSetIsTodoTaskOpen(true))
+        dispatch(TasksSetIsTodoTaskMinimized(false))
+      }
     }
   ]
 
@@ -34,7 +44,9 @@ const Desktop = () => {
       w-full h-full
     '
     >
+      <TodoApp />
       <MusicApp />
+      <StartMenu />
       {DesktopItemProps.map((item, index) => {
         return (
           <DesktopIcon

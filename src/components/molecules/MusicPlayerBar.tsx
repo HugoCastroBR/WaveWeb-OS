@@ -90,16 +90,16 @@ const MusicPlayerBar = () => {
     dispatch(MusicsResetAll())
     setMusicProgress(0)
     setCurrentSongName('')
-    setIsMusicPaused(false)
+    setIsMusicPaused(true)
   }
 
 
 
 
   return (
-    <div className='w-full h-full flex  justify-center items-center'>
-      <div className='w-32 h-full flex justify-center items-center'>
-        <Image src={states.Musics.currentSongImage || '/assets/icons/music-default.png'} width={128} height={128} alt='cover' />
+    <div className='w-full h-full flex  justify-center items-center pb-1'>
+      <div className='w-32 h-full flex justify-center items-center mb-8'>
+        <Image src={states.Musics.currentSongImage || '/assets/icons/music-default.png'} width={124} height={124} alt='cover' />
       </div>
       <div className='w-4/12 h-full flex flex-col'>
         <CustomText text={states.Musics.songName || 'Mind Void'} className='ml-2 mt-px font-medium text-xl'/>
@@ -159,7 +159,7 @@ const MusicPlayerBar = () => {
         className='text-md font-medium'
       />
       }
-      <Progress.Root size="lg" w={220} radius={0} color='gray'>
+      <Progress.Root size="lg" w={180} radius={0} color='gray'>
         <Progress.Section 
           value={calculateProgress(states.Musics.currentSongLength || 0, musicProgress)}
           color='gray' 
@@ -171,7 +171,7 @@ const MusicPlayerBar = () => {
       <div className='w-3/12 h-full flex flex-col justify-center items-center'>
       <CustomText text={`Vol: ${states.Musics.volume}%`} className='text-md font-medium'/>
       <Slider 
-      w={220}
+      w={180}
       size={'xl'}
       radius={0}
       thumbSize={20}

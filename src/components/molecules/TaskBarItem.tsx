@@ -14,7 +14,7 @@ const TaskBarItem = ({
 }:TaskBarItemProps) => {
   return (
     <CustomActionButton 
-      className='w-24 h-8 flex justify-between pr-1 ml-0.5' 
+      className='w-32 h-8 flex justify-between pr-1 ml-0.5' 
       onClick={() => onClick && onClick(text)}
     >
       {/* <Image width="26" height="26" src="/assets/icons/task-bar-start.png" alt="vaporwave" /> */}

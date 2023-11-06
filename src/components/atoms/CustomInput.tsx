@@ -1,11 +1,13 @@
-import React, { ChangeEvent } from 'react'
+'use client'
+import React, { ChangeEvent, useEffect } from 'react'
 
 interface CustomInputProps {
   className?: string
   label: string
   defaultValue?: string
   onChange?: (value:string | ChangeEvent<HTMLInputElement>) => void
-  type?: string
+  type?: string,
+  value?: string
 }
 
 const CustomInput = ({
@@ -13,8 +15,15 @@ const CustomInput = ({
   label,
   defaultValue,
   onChange,
-  type
+  type,
+  value
 }:CustomInputProps) => {
+
+  const [inputValue, setInputValue] = React.useState(value || '')
+  useEffect(() => {
+    setInputValue(value || '')
+  }, [value])
+
   return (
     <>
       <label className="text-base first-letter:underline" htmlFor={`text-input-${label}`}>
@@ -43,6 +52,7 @@ const CustomInput = ({
       :
       <input 
       onChange={(e) => {
+        setInputValue(e.target.value)
         if(onChange) {
           onChange(e.target.value)
         }
@@ -50,6 +60,7 @@ const CustomInput = ({
       type={type || 'text'}
       id={`text-input-${label}`}
       defaultValue={defaultValue || ''}
+      value={inputValue}
       className={`
       border-2 flex flex-col bg-gray-300 
       border-t-gray-800  border-l-gray-800

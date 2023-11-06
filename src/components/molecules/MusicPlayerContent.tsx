@@ -50,8 +50,8 @@ const MySong = ({
   return (
     <div
       className=' 
-        w-full h-28  flex justify-center border border-r-0 border-gray-400 -ml-px
-        cursor-pointer hover:bg-gray-200 duration-200 border-b-0 my-1
+        w-full h-24  flex justify-center border border-r-0 border-gray-400 -ml-px
+        cursor-pointer hover:bg-gray-200 duration-200 border-b-0 my-1 
         '
       onClick={() => {
         getMP3Duration(url).then((duration) => {
@@ -76,7 +76,7 @@ const MySong = ({
         </div>
         <CustomText 
           text={`${formatSecondsToMinutes(musicDuration)}`} 
-          className='text-base   text-gray-800 h-1/6 mt-4' />
+          className='text-sm   text-gray-700 h-1/6 mt-2' />
       </div>
     </div>
   )
@@ -119,13 +119,13 @@ const MusicPlayerContent = ({
   const [musicArtist, setMusicArtist] = React.useState('')
 
   const handlerUploadMusic = async () => {
-    const res = await uploadMusic(musicFile as File, imageFile as File, musicName,musicArtist)
+    await uploadMusic(musicFile as File, imageFile as File, musicName,musicArtist)
     await handlerGetLocalMusics()
   }
 
   return (
     <div className=' w-full h-full flex'>
-      <div className='h-full w-5/12 flex flex-col border-r border-gray-400 -mt-1'>
+      <div className='h-full w-5/12 flex flex-col border-r border-gray-400 mt-1'>
         <div className='h-1/5 w-full flex justify-center items-center'>
           <form className='flex h-full'>
             <div className='flex flex-col h-full w-1/2 justify-center'>
@@ -171,8 +171,8 @@ const MusicPlayerContent = ({
             </div>
           </form>
         </div>
-        <CustomText text='Full Sounds:' className='text-2xl font-semibold ' />
-        <div className=' w-full overflow-y-scroll flex flex-col'>
+        <CustomText text='My Musics:' className='text-2xl font-semibold ' />
+        <div className=' w-full overflow-y-auto flex flex-col'>
               
           <MySong
             artistName='eevee'
@@ -181,6 +181,7 @@ const MusicPlayerContent = ({
             url='/songs/eevee-seeds/sound.mp3'
             key={1}
           />
+          
           {
             localMusics.map((music, index) => {
               console.log(music)
@@ -199,7 +200,7 @@ const MusicPlayerContent = ({
 
         </div>
       </div>
-      <div className='h-full  w-7/12 flex flex-col'>
+      <div className='h-full  w-7/12 flex flex-col mt-1'>
         <div className='h-16  ml-1 w-full flex '>
           <div className='w-1/2 '>
             <CustomInput label='Search a song:' className='w-full h-8 flex flex-col'
@@ -218,10 +219,10 @@ const MusicPlayerContent = ({
             </CustomActionButton>
           </div>
         </div>
-        <div className='h-full placeholder:flex flex-col my-2 mx-1 mt-8'>
+        <div className='h-full placeholder:flex flex-col my-2 mx-1 mt-1'>
           <CustomText text='Results' className='text-2xl font-medium' />
           <Divider className='w-full mt-2' color='gray' />
-          <div className='overflow-y-scroll flex flex-col w-full h-5/6 pt-2'>
+          <div className='overflow-y-scroll flex flex-col w-full h-5/6 '>
             <MusicPlayerList
               items={tracksResult?.tracks?.items || []}
             />

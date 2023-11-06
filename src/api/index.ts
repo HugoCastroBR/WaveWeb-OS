@@ -1,3 +1,5 @@
+import { TodoProps } from "@/store/reducers/todo"
+
 const url = 'http://localhost:3333'
 
 export const verifyHealth = async () => {
@@ -37,6 +39,51 @@ export type getMusic = {
 
 export const getMusics = async ():Promise<getMusic[]> => {
   const response = await fetch(`${url}/music`)
+  const data = await response.json()
+  return data
+}
+
+
+
+export const getTodos = async ():Promise<TodoProps[]> => {
+  const response = await fetch(`${url}/todo`)
+  const data = await response.json()
+  return data
+}
+
+export const postTodo = async (title:string,content:string) => {
+  const response = await fetch(`${url}/todo`,{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify({
+      title,
+      content
+    })
+  })
+  const data = await response.json()
+  return data
+}
+
+export const updateTodo = async (
+  id:number,
+  title:string,
+  content:string,
+  isDone:boolean
+  ):Promise<TodoProps> => {
+
+  const response = await fetch(`${url}/todo/${id}`,{
+    method:'PATCH',
+    headers:{
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify({
+      title,
+      content,
+      isDone
+    })
+  })
   const data = await response.json()
   return data
 }
