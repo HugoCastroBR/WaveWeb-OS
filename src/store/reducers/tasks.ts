@@ -15,6 +15,7 @@ interface ItemTaskState {
 interface TasksState {
   MusicTask: ItemTaskState,
   TodoTask: ItemTaskState,
+  NotePadTask: ItemTaskState,
   isStartMenuOpen?: boolean,
 }
 const initialState: TasksState = {
@@ -33,6 +34,14 @@ const initialState: TasksState = {
     name: "TodoTask",
     title: "Todo",
     icon: '/assets/icons/todo-task.png',
+  },
+  NotePadTask: {
+    isOpen: false,
+    isMinimized: false,
+    isMaximized: false,
+    name: "NotePadTask",
+    title: "NotePad",
+    icon: '/assets/icons/note-pad-task.png',
   },
   isStartMenuOpen: false,
 }
@@ -62,5 +71,15 @@ export const TasksSlice = createSlice({
     SET_IS_TODO_TASK_MAXIMIZED(state,{payload}:{payload:boolean}){
       state.TodoTask.isMaximized = payload
     },
+    SET_IS_NOTEPAD_TASK_OPEN(state,{payload}:{payload:boolean}){
+      state.NotePadTask.isOpen = payload
+    },
+    SET_IS_NOTEPAD_TASK_MINIMIZED(state,{payload}:{payload:boolean}){
+      state.NotePadTask.isMinimized = payload
+    },
+    SET_IS_NOTEPAD_TASK_MAXIMIZED(state,{payload}:{payload:boolean}){
+      state.NotePadTask.isMaximized = payload
+    },
+
 	},
 });

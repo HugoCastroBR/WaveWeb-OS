@@ -2,14 +2,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 
-export type AppNotificationType = {
-	notificationType: 'success' | 'error' | 'warning' | 'info' ;
-}
 
-type IAppSlice =  AppNotificationType &{
+
+type IAppSlice = {
 	isNotificationOpen: boolean;
 	notificationMessage: string;
-	notificationType: 'success' | 'error' | 'warning' | 'info' ;
+	notificationTitle: string;
+	confirmed: boolean | null;
+	focusedItem?: string;
+	isFileMenuOpen?: boolean;
+	isAboutMenuOpen?: boolean;
 }
 
 
@@ -18,7 +20,12 @@ export const AppSlice = createSlice({
 	initialState: {
 		isNotificationOpen: false,
 		notificationMessage: '',
-		notificationType: 'success',
+		notificationTitle: '',
+		confirmed: null,
+		focusedItem: undefined,
+		isFileMenuOpen: false,
+		isAboutMenuOpen: false,
+		
 	} as IAppSlice,
 	reducers: {
 		SET_NOTIFICATION(state,{payload}:{payload:boolean}){
@@ -27,13 +34,25 @@ export const AppSlice = createSlice({
 		SET_NOTIFICATION_MESSAGE(state,{payload}:{payload:string}){
 			state.notificationMessage = payload
 		},
-		SET_NOTIFICATION_TYPE(state,{payload}:{payload:AppNotificationType}){
-			state.notificationType = payload.notificationType
+		SET_NOTIFICATION_TITLE(state,{payload}:{payload:string}){
+			state.notificationTitle = payload
 		},
-		HANDLER_NOTIFICATION(state,{payload}:{payload:{value:string,type:AppNotificationType}}){
+		HANDLER_NOTIFICATION(state,{payload}:{payload: {title:string,message:string}}){
 			state.isNotificationOpen = true
-			state.notificationMessage = payload.value
-			state.notificationType = payload.type.notificationType
+			state.notificationMessage = payload.message
+			state.notificationTitle = payload.title
+		},
+		SET_CONFIRMED(state,{payload}:{payload:boolean}){
+			state.confirmed = payload
+		},
+		SET_FOCUSED_ITEM(state,{payload}:{payload:string}){
+			state.focusedItem = payload
+		},
+		SET_FILE_MENU_OPEN(state,{payload}:{payload:boolean}){
+			state.isFileMenuOpen = payload
+		},
+		SET_ABOUT_MENU_OPEN(state,{payload}:{payload:boolean}){
+			state.isAboutMenuOpen = payload
 		},
 	},
 });

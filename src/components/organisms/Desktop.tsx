@@ -2,16 +2,20 @@
 import React from 'react'
 import DesktopIcon from '../molecules/DesktopIcon'
 import useStore from '@/hooks/useStore'
-import { TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskOpen, TasksSetIsTodoTaskMinimized, TasksSetIsTodoTaskOpen } from '@/store/actions'
+import { FolderSetIsFolderMinimized, FolderSetIsFolderOpen, TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskOpen, TasksSetIsNotePadTaskOpen, TasksSetIsTodoTaskMinimized, TasksSetIsTodoTaskOpen } from '@/store/actions'
 import MusicApp from './MusicApp'
 import StartMenu from './StartMenu'
 import TodoApp from './TodoApp'
+import NotePadApp from './NotePadApp'
+import NoteFolder from './NoteFolder'
+import CustomAlert from './CustomAlert'
 
 interface DesktopItemProps {
   onClick?: () => void
   imgSrc: string
   text: string
 }
+
 
 const Desktop = () => {
 
@@ -31,7 +35,23 @@ const Desktop = () => {
         dispatch(TasksSetIsTodoTaskOpen(true))
         dispatch(TasksSetIsTodoTaskMinimized(false))
       }
-    }
+    },
+    {
+      imgSrc: '/assets/icons/note-pad-task.png',
+      text: 'Notepad',
+      onClick() {
+        dispatch(TasksSetIsNotePadTaskOpen(true))
+        dispatch(TasksSetIsTodoTaskMinimized(false))
+      }
+    },
+    {
+      imgSrc: '/assets/icons/note-folder.png',
+      text: 'My Notes',
+      onClick() {
+        dispatch(FolderSetIsFolderOpen('My Notes',true))
+        dispatch(FolderSetIsFolderMinimized('My Notes',false))
+      }
+    },
   ]
 
   const {states, dispatch} = useStore()
@@ -44,6 +64,9 @@ const Desktop = () => {
       w-full h-full
     '
     >
+      <CustomAlert />
+      <NoteFolder />
+      <NotePadApp />
       <TodoApp />
       <MusicApp />
       <StartMenu />

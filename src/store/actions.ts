@@ -1,8 +1,8 @@
 
 import { SpotifySearchMusic } from '@/api/spotify';
-import { AppActions,AuthActions,TasksActions,MusicsActions, TodoActions } from './index';
-import { AppNotificationType } from './reducers/app';
+import { AppActions,AuthActions,TasksActions,MusicsActions, TodoActions,FoldersActions, NoteActions } from './index';
 import { TodoProps } from './reducers/todo';
+import { NoteProps } from '@/api';
 
 
 
@@ -12,12 +12,56 @@ export const SetNotification = (value: boolean) => {
 export const SetNotificationMessage = (value: string) => {
   return AppActions.SET_NOTIFICATION_MESSAGE(value)
 }
-export const SetNotificationType = (value: AppNotificationType) => {
-  return AppActions.SET_NOTIFICATION_TYPE(value)
+export const AppHandlerNotification = (title:string,message:string) => {
+  return AppActions.HANDLER_NOTIFICATION({title,message})
 }
-export const AppHandlerNotification = (value: string, type: AppNotificationType) => {
-  return AppActions.HANDLER_NOTIFICATION({value,type})
+export const AppSetConfirmed = (value: boolean) => {
+  return AppActions.SET_CONFIRMED(value)
 }
+export const AppSetFocusedItem = (value: string) => {
+  return AppActions.SET_FOCUSED_ITEM(value)
+}
+export const AppSetFileMenuOpen = (value: boolean) => {
+  return AppActions.SET_FILE_MENU_OPEN(value)
+}
+export const AppSetAboutMenuOpen = (value: boolean) => {
+  return AppActions.SET_ABOUT_MENU_OPEN(value)
+}
+
+
+export const FolderSetNoteFolderContent = (
+  folderName: string, 
+  content: {id:string,
+    type:'note',
+    title:string
+  }[]
+  ) => {
+  return FoldersActions.SET_FOLDER_CONTENT({folderName,content})
+}
+export const FolderSetIsFolderOpen = (folderName: string, isOpen: boolean) => {
+  return FoldersActions.SET_IS_FOLDER_OPEN({folderName,isOpen})
+}
+export const FolderSetIsFolderMinimized = (folderName: string, isMinimized: boolean) => {
+  return FoldersActions.SET_IS_FOLDER_MINIMIZED({folderName,isMinimized})
+}
+export const FolderSetIsFolderMaximized = (folderName: string, isMaximized: boolean) => {
+  return FoldersActions.SET_IS_FOLDER_MAXIMIZED({folderName,isMaximized})
+}
+export const FolderAddFolder = (value: {
+  title: string,
+  icon: string,
+  content:  {
+    id:string,
+    type:'note',
+    title:string
+  }[],
+  isOpen: boolean,
+  isMinimized: boolean,
+  isMaximized: boolean,
+}) => {
+  return FoldersActions.ADD_FOLDER(value)
+}
+
 
 export const TasksSetIsMusicTaskOpen = (value: boolean) => {
   return TasksActions.SET_IS_MUSIC_TASK_OPEN(value)
@@ -38,6 +82,17 @@ export const TasksSetIsTodoTaskMinimized = (value: boolean) => {
 export const TasksSetIsTodoTaskMaximized = (value: boolean) => {
   return TasksActions.SET_IS_TODO_TASK_MAXIMIZED(value)
 }
+
+export const TasksSetIsNotePadTaskOpen = (value: boolean) => {
+  return TasksActions.SET_IS_NOTEPAD_TASK_OPEN(value)
+}
+export const TasksSetIsNotePadTaskMinimized = (value: boolean) => {
+  return TasksActions.SET_IS_NOTEPAD_TASK_MINIMIZED(value)
+}
+export const TasksSetIsNotePadTaskMaximized = (value: boolean) => {
+  return TasksActions.SET_IS_NOTEPAD_TASK_MAXIMIZED(value)
+}
+
 
 
 export const MusicsSetSearch = (value: SpotifySearchMusic) => {
@@ -89,9 +144,21 @@ export const SetIsStartMenuOpen = (value: boolean) => {
   return TasksActions.SET_IS_START_MENU_OPEN(value)
 }
 
+
 export const TodoSetTodos = (value: TodoProps[]) => {
   return TodoActions.SET_TODOS(value)
 }
 export const TodoSetCurrentTodo = (value: TodoProps) => {
   return TodoActions.SET_CURRENT_TODO(value)
+}
+
+
+export const NoteSetNotes = (value: NoteProps[]) => {
+  return NoteActions.SET_NOTES(value)
+}
+export const NoteSetCurrentNote = (value: NoteProps) => {
+  return NoteActions.SET_CURRENT_NOTES(value)
+}
+export const NoteSetIsEdit = (value: boolean) => {
+  return NoteActions.SET_IS_EDIT(value)
 }

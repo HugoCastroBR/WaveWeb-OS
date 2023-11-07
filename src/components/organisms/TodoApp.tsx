@@ -7,6 +7,7 @@ import TodoItem from '../molecules/TodoItem'
 import NewTodoItem from '../molecules/NewTodoItem'
 import { getTodos } from '@/api'
 
+
 const TodoApp = () => {
 
   const {states,dispatch} = useStore()
@@ -26,6 +27,7 @@ const TodoApp = () => {
   return (
     <CustomBox 
       tittle='Todo List'
+      icon={states.Tasks.TodoTask.icon}
       className={`
         absolute top-64 left-64 w-2/6 h-4/6 bg-gray-300
         mb-1

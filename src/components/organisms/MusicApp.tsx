@@ -100,6 +100,7 @@ const MusicApp = () => {
   return (
     <CustomBox
       tittle='Music'
+      icon={states.Tasks.MusicTask.icon}
       className={`
         absolute top-64 left-64 w-3/6 h-5/6 bg-gray-300
         my-1

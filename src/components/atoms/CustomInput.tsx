@@ -62,7 +62,7 @@ const CustomInput = ({
       defaultValue={defaultValue || ''}
       value={inputValue}
       className={`
-      border-2 flex flex-col bg-gray-300 
+      border-2 flex flex-col bg-gray-200 
       border-t-gray-800  border-l-gray-800
       border-r-gray-100  border-b-gray-100
       focus:outline-none p-px 

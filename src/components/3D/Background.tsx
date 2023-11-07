@@ -18,7 +18,7 @@ const Background = (props: any) => {
         fade
         speed={0.1}
       />
-      {/* <OrbitControls autoRotate autoRotateSpeed={0.01}/> */}
+      <OrbitControls autoRotate autoRotateSpeed={1}/>
       <mesh {...props}>
         {/* <sphereGeometry attach="geometry" args={[1, 32, 32]} /> */}
         {props.children}

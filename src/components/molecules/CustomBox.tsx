@@ -1,8 +1,12 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CustomText from '../atoms/CustomText'
 import CustomWindowHeaderButton from '../atoms/CustomWindowHeaderButton'
 import Draggable from 'react-draggable';
+import AppTaskBar from './AppTaskBar';
+import Image from 'next/image';
+import useStore from '@/hooks/useStore';
+import { AppSetFocusedItem } from '@/store/actions';
 
 interface CustomBoxProps {
   children: React.ReactNode
@@ -18,6 +22,13 @@ interface CustomBoxProps {
   maximized?: boolean,
   setMaximized?: (maximized: boolean) => void
   resize?: boolean
+  withTaskBar?: boolean
+  icon?: string
+  onSave?: () => void
+  onRemove?: () => void
+  removeOption?: boolean
+  saveOption?: boolean
+  onClick?: () => void
 }
 const CustomBox = ({
   children,
@@ -32,12 +43,35 @@ const CustomBox = ({
   setMinimized,
   maximized,
   setMaximized,
-  resize
+  resize,
+  withTaskBar,
+  icon,
+  onSave,
+  saveOption,
+  onRemove,
+  removeOption,
+  onClick,
 }: CustomBoxProps) => {
 
+  const {states, dispatch} = useStore()
+
+  const [isFocused, setIsFocused] = useState(false)
+
+  useEffect(() => {
+    if(states.App.focusedItem === tittle) {
+      setIsFocused(true)
+    } else {
+      setIsFocused(false)
+    }
+  }, [states.App.focusedItem])
 
   return (
-    <Draggable handle='.handle' disabled={maximized} position={maximized ? { x: 0, y: 0 } : undefined} >
+    <Draggable 
+      handle='.handle' 
+      disabled={maximized} 
+      position={maximized ? { x: 0, y: 0 } : undefined} 
+    >
+      
       <div
         className={`top-1/4
         bg-gray-300 ${closed && 'hidden'} ${minimized && 'hidden'}
@@ -47,18 +81,27 @@ const CustomBox = ({
         drop-shadow-sm shadow-sm shadow-gray-800 ${className} !overflow-hidden
         ${resize ? 'hover:resize' : ''}
         ${maximized ? ' !w-full !h-full !top-0 !left-0 cursor-auto' : ''}
+        ${isFocused ? ' !z-30' : ''}
         `}
+        onClick={() => {
+          dispatch(AppSetFocusedItem(tittle))
+          onClick && onClick()
+        }}
       >
+        
         <div className={`
-        w-full flex justify-between items-center h-8 pl-2 pr-1 
+        w-full flex justify-between items-center h-10 pl-px pr-1 
         bg-gradient-to-l from-pink-400 via-indigo-300 to-blue-500
         handle cursor-move ${maximized ? ' !cursor-auto' : ''}
         `}
-        >
+        > 
+          <div className='flex items-center'>
+          {icon && <Image src={icon} width={32} height={32} alt='icon' />}
           <CustomText
             text={tittle || '404: Mind not found'}
-            className='font-medium text-gray-100 '
+            className='font-medium text-gray-100 ml-1'
           />
+          </div>
           <div className='flex'>
             {!disableMinimize && <CustomWindowHeaderButton type='minimize'
               onClick={() => {
@@ -75,6 +118,16 @@ const CustomBox = ({
             }} />}
           </div>
         </div>
+        {withTaskBar && <AppTaskBar 
+          saveOption={saveOption}
+          removeOption={removeOption}
+          onRemove={() => {
+            onRemove && onRemove()
+          }}
+          onSave={() => {
+            onSave && onSave()
+          }}
+        />}
         <div className='p-1 w-full h-full '>
           {children}
         </div>

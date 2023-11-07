@@ -87,7 +87,9 @@ const Sculpture: React.FC = () => {
   useFrame(() => {
     if (modelRef.current) {
       // modelRef.current.rotation.x += 0.005; // Rotação em torno do eixo X
-      modelRef.current.rotation.y += 0.00025; // Rotação em torno do eixo Y
+      // modelRef.current.rotation.y += 0.00025; // Rotação em torno do eixo Y
+      modelRef.current.rotation.y += -0.005; // Rotação em torno do eixo Y
+
     }
   });
 

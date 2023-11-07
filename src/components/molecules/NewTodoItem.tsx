@@ -10,6 +10,7 @@ import { getTodos, postTodo } from '@/api'
 import wait from '@/utils/wait'
 import { TodoSetTodos } from '@/store/actions'
 import useStore from '@/hooks/useStore'
+import CustomTextArea from '../atoms/CustomTextArea'
 
 const NewTodoItem = () => {
 
@@ -115,7 +116,7 @@ const NewTodoItem = () => {
                   setTitle(value as string)
                 }}
               />
-              <CustomInput 
+              <CustomTextArea 
                 label='Description' 
                 value={content}
                 className='w-full' 

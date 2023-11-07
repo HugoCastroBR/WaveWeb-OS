@@ -6,7 +6,7 @@ import CustomBox from '../molecules/CustomBox'
 import useStore from '@/hooks/useStore'
 import DesktopIcon from '../molecules/DesktopIcon'
 import TaskBarItem from '../molecules/TaskBarItem'
-import { TasksSetIsMusicTaskOpen, TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskMaximized, SetIsStartMenuOpen, TasksSetIsTodoTaskMinimized, TasksSetIsTodoTaskOpen } from '@/store/actions'
+import { TasksSetIsMusicTaskOpen, TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskMaximized, SetIsStartMenuOpen, TasksSetIsTodoTaskMinimized, TasksSetIsTodoTaskOpen, TasksSetIsNotePadTaskMinimized, TasksSetIsNotePadTaskOpen, FolderSetIsFolderMinimized, FolderSetIsFolderOpen } from '@/store/actions'
 const TaskBar = () => {
 
   const [time, setTime] = React.useState('')
@@ -57,6 +57,23 @@ const TaskBar = () => {
         dispatch(TasksSetIsTodoTaskMinimized(true))
         // dispatch(TasksSetIsTodoTaskMaximized(false))
         break;
+      case 'Notepad':
+        if(states.Tasks.NotePadTask.isMinimized) {
+          dispatch(TasksSetIsNotePadTaskMinimized(false))
+          break;
+        }
+        dispatch(TasksSetIsNotePadTaskOpen(true))
+        dispatch(TasksSetIsNotePadTaskMinimized(true))
+        // dispatch(TasksSetIsNotePadTaskMaximized(false))
+        break;
+      case 'My Notes':
+        if(states.Folders.find(folder => folder.title === 'My Notes')?.isMinimized) {
+          dispatch(FolderSetIsFolderMinimized('My Notes',false))
+          break;
+        }
+        dispatch(FolderSetIsFolderOpen('My Notes',true))
+        dispatch(FolderSetIsFolderMinimized('My Notes',true))
+        break;
       default:
         break;
     }
@@ -98,6 +115,21 @@ const TaskBar = () => {
         <TaskBarItem
         text='Todo List'
         icon={states.Tasks.TodoTask.icon}
+        onClick={HandlerOnClick} />
+        }
+        {
+        states.Tasks.NotePadTask.isOpen
+        &&
+        <TaskBarItem
+        text='Notepad'
+        icon={states.Tasks.NotePadTask.icon}
+        onClick={HandlerOnClick} />
+        }
+        {
+        states.Folders.find(folder => folder.title === 'My Notes')?.isOpen &&
+        <TaskBarItem
+        text='My Notes'
+        icon='/assets/icons/note-folder.png'
         onClick={HandlerOnClick} />
         }
 

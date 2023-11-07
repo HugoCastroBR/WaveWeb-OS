@@ -5,10 +5,11 @@ import React, { useEffect } from 'react'
 import CustomActionButton from '../atoms/CustomActionButton'
 import CustomText from '../atoms/CustomText'
 import { TodoProps } from '@/store/reducers/todo'
-import { getTodos, updateTodo } from '@/api'
+import { getTodos, removeTodo, updateTodo } from '@/api'
 import { TodoSetTodos } from '@/store/actions'
-import { useStore } from 'react-redux'
 import wait from '@/utils/wait'
+import useStore from '@/hooks/useStore'
+import Image from 'next/image'
 
 const TodoItem = ({
   content,
@@ -19,12 +20,12 @@ const TodoItem = ({
   updatedAt,
 }: TodoProps) => {
 
-  const {states, dispatch} = useStore()
+  const { states, dispatch } = useStore()
 
   const [done, setDone] = React.useState(isDone)
-  
 
-  const handlerLoadTodos = async() => {
+
+  const handlerLoadTodos = async () => {
     const response = await getTodos()
     wait(1000)
     dispatch(TodoSetTodos(response))
@@ -33,10 +34,18 @@ const TodoItem = ({
 
   const handlePatchTodo = async () => {
     const res = await updateTodo(id, title, content, done)
+    wait(1000)
     handlerLoadTodos()
     console.log(res)
-    
+
     return res
+  }
+
+  const handleRemoveTodo = async () => {
+    const res = await removeTodo(id)
+    console.log(res)
+    wait(1000)
+    handlerLoadTodos()
   }
 
   useEffect(() => {
@@ -122,25 +131,41 @@ const TodoItem = ({
                 className='mr-1 text-xs italic text-gray-800'
                 text={`Created at ${createdAt}`}
               />
-              <div className='flex items-center justify-end p-px'>
-                <CustomText
-                  className='mr-1'
-                  text='Done:'
-                />
-                <CustomActionButton 
-                  className='h-8 w-8 '
-                  onClick={() => {
-                    setDone(!done)
-                  }}
-                >
-                  {
-                  isDone
-                  ? 
-                  '✓'
-                  :
-                  'X'
-                  }
-                </CustomActionButton>
+              <div className='flex flex-col items-center justify-end p-px mt-4 -mr-4'>
+                <div className='flex mr-5 mb-1'>
+                  <CustomText
+                    className='mr-1'
+                    text='Remove:'
+                  />
+                  <CustomActionButton
+                    className='h-8 w-8 '
+                    onClick={() => {
+                      handleRemoveTodo()
+                    }}
+                  >
+                    <Image src='/assets/icons/trash.png' width={24} height={24} alt='icon' />
+                  </CustomActionButton>
+                </div>
+                <div className='flex'>
+                  <CustomText
+                    className='mr-1'
+                    text='Done:'
+                  />
+                  <CustomActionButton
+                    className='h-8 w-8 '
+                    onClick={() => {
+                      setDone(!done)
+                    }}
+                  >
+                    {
+                      isDone
+                        ?
+                        <Image src='/assets/icons/done.png' width={24} height={24} alt='icon' />
+                        :
+                        <Image src='/assets/icons/x.png' width={24} height={24} alt='icon' />
+                    }
+                  </CustomActionButton>
+                </div>
               </div>
             </div>
           </div>
