@@ -22,9 +22,6 @@ const TodoItem = ({
 
   const { states, dispatch } = useStore()
 
-  const [done, setDone] = React.useState(isDone)
-
-
   const handlerLoadTodos = async () => {
     const response = await getTodos()
     wait(1000)
@@ -32,7 +29,7 @@ const TodoItem = ({
     return response
   }
 
-  const handlePatchTodo = async () => {
+  const handlePatchTodo = async (done:boolean) => {
     const res = await updateTodo(id, title, content, done)
     wait(1000)
     handlerLoadTodos()
@@ -48,9 +45,11 @@ const TodoItem = ({
     handlerLoadTodos()
   }
 
-  useEffect(() => {
-    handlePatchTodo()
-  }, [done])
+  // useEffect(() => {
+  //   if(done){
+  //     handlePatchTodo()
+  //   }
+  // }, [done])
 
 
   return (
@@ -154,7 +153,8 @@ const TodoItem = ({
                   <CustomActionButton
                     className='h-8 w-8 '
                     onClick={() => {
-                      setDone(!done)
+                      
+                      handlePatchTodo(!isDone)
                     }}
                   >
                     {

@@ -74,7 +74,9 @@ const MusicApp = () => {
   }
 
   useEffect(() => {
-    handlerGetAccessToken()
+    if(states.Tasks.MusicTask.isOpen) {
+      handlerGetAccessToken()
+    }
   }, [states.Tasks.MusicTask.isOpen])
 
   useEffect(() => {
@@ -83,10 +85,7 @@ const MusicApp = () => {
     }
   }, [states.Musics.currentSong])
 
-  // useEffect(() => {
-  //   console.log("now")
-  //   playAudioFromUrl('/songs/eevee-seeds/sound.mp3' )
-  // },[states.Tasks.MusicTask.isMinimized])
+
 
   const handlerSearch = async (value:string) => {
     const res = await searchMusic(value)

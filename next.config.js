@@ -2,10 +2,8 @@
 const nextConfig = {
   webpack(config, { nextRuntime }) { 
     // as of Next.js latest versions, the nextRuntime is preferred over `isServer`, because of edge-runtime
-
     return config;
   },
-  reactStrictMode: true,
   images: {
     remotePatterns: [
       {

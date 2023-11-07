@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from 'react'
+import React, { ChangeEvent, useEffect } from 'react'
 import CustomText from '../atoms/CustomText'
 import MusicPlayerList from './MusicPlayerList'
 import Image from 'next/image'
@@ -92,13 +92,11 @@ const MusicPlayerContent = ({
   tracksResult
 }: MusicPlayerContentProps) => {
 
+  const { states, dispatch } = useStore()
+
 
   const [search, setSearch] = React.useState('')
 
-  const handlerVerifyApiHealth = async () => {
-    const res = await verifyHealth()
-    console.log(res)
-  }
 
   const [localMusics, setLocalMusics] = React.useState<getMusic[]>([] as getMusic[])
   
@@ -108,8 +106,10 @@ const MusicPlayerContent = ({
     setLocalMusics(res)
   }
   useEffect(() => {
-    handlerGetLocalMusics()
-  },[])
+    if(states.Tasks.MusicTask.isOpen) {
+      handlerGetLocalMusics()
+    }
+  },[states.Tasks.MusicTask.isOpen])
 
 
 
@@ -123,6 +123,23 @@ const MusicPlayerContent = ({
     await handlerGetLocalMusics()
   }
 
+  const RenderLocalMusics = ( ) => {
+    return(
+      localMusics.map((music, index) => {
+        console.log(music)
+        return (
+          <MySong
+            artistName={music.artist}
+            image={`/${music.coverUrl}`}
+            songName={music.title}
+            url={`/${music.musicUrl}`}
+            key={index}
+          />
+        )
+      })
+    )
+  }
+
   return (
     <div className=' w-full h-full flex'>
       <div className='h-full w-5/12 flex flex-col border-r border-gray-400 mt-1'>
@@ -130,13 +147,17 @@ const MusicPlayerContent = ({
           <form className='flex h-full'>
             <div className='flex flex-col h-full w-1/2 justify-center'>
               <CustomInput type='file' label='Upload a song:' className='w-full h-10 flex flex-col' 
-                onChange={(e) => {
-                  setMusicFile(e.target.files?.[0] || null)
+                onChange={(e:string | ChangeEvent<HTMLInputElement>) => {
+                  if(typeof e !== 'string') {
+                    setMusicFile(e.target.files?.[0] || null)
+                  }
                 }}
               />
               <CustomInput type='file' label='Upload a image:' className='w-full h-10 flex flex-col'
-                onChange={(e) => {
-                  setImageFile(e.target.files?.[0] || null)
+                onChange={(e:string | ChangeEvent<HTMLInputElement>) => {
+                  if(typeof e !== 'string') {
+                    setImageFile(e.target.files?.[0] || null)
+                  }
                 }}
               />
               </div>
@@ -161,9 +182,7 @@ const MusicPlayerContent = ({
                 <CustomActionButton className='w-20 h-6 mt-2' onClick={() => {
 
 
-                  handlerVerifyApiHealth()
                   handlerUploadMusic()
-                  wait(1000)
                   handlerGetLocalMusics()
 
                 }}>Upload</CustomActionButton>
@@ -182,20 +201,7 @@ const MusicPlayerContent = ({
             key={1}
           />
           
-          {
-            localMusics.map((music, index) => {
-              console.log(music)
-              return (
-                <MySong
-                  artistName={music.artist}
-                  image={`/${music.coverUrl}`}
-                  songName={music.title}
-                  url={`/${music.musicUrl}`}
-                  key={index}
-                />
-              )
-            })
-          }
+          <RenderLocalMusics />
 
 
         </div>
@@ -205,7 +211,7 @@ const MusicPlayerContent = ({
           <div className='w-1/2 '>
             <CustomInput label='Search a song:' className='w-full h-8 flex flex-col'
               onChange={(e) => {
-                setSearch(e)
+                setSearch(String(e))
               }}
             />
           </div>
@@ -228,25 +234,6 @@ const MusicPlayerContent = ({
             />
           </div>
         </div>
-        {/* <div className='m-1 mb-2 pt-1 w-full h-full flex justify-center items-center'>
-          <Pagination
-            total={10}
-            color="gray"
-            radius={0}
-            size={'sm'}
-            gap={1}
-            styles={{
-              control: {
-                borderRadius: 0,
-                borderBottom: '2px solid #111827',
-                borderRight: '2px solid #111827',
-                borderLeft: '2px solid #f3f4f6',
-                borderTop: '2px solid #f3f4f6',
-                backgroundColor: '#cbd5e1',
-              }
-            }}
-          />
-        </div> */}
       </div>
     </div>
   )

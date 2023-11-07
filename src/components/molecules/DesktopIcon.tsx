@@ -17,13 +17,13 @@ const DesktopIcon = ({
 }:DesktopIconProps) => {
   return (
     <div 
-      className='flex flex-col w-20 h-20 justify-center items-center m-1 cursor-pointer z-10
+      className='flex flex-col w-20 h-20 justify-center items-center m-1 cursor-pointer z-20
       '
       onClick={onClick}
     >
       <Image src={imgSrc} width={52} height={52} alt={`${text}`} />
       <CustomText
-        className='text-sm -mt-1 font-semibold'
+        className='text-sm -mt-0 font-semibold text-gray-800'
         text={`${text}`}
       />
     </div>

@@ -7,11 +7,16 @@ import useStore from '@/hooks/useStore'
 import DesktopIcon from '../molecules/DesktopIcon'
 import TaskBarItem from '../molecules/TaskBarItem'
 import { TasksSetIsMusicTaskOpen, TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskMaximized, SetIsStartMenuOpen, TasksSetIsTodoTaskMinimized, TasksSetIsTodoTaskOpen, TasksSetIsNotePadTaskMinimized, TasksSetIsNotePadTaskOpen, FolderSetIsFolderMinimized, FolderSetIsFolderOpen } from '@/store/actions'
+import { useDisclosure } from '@mantine/hooks'
+import { Drawer } from '@mantine/core'
 const TaskBar = () => {
 
   const [time, setTime] = React.useState('')
   
   const {states, dispatch} = useStore()
+
+  const [opened, { open, close }] = useDisclosure(false);
+
 
   function getCurrentTimeEveryMinute() {
     function getCurrentTime() {
@@ -87,14 +92,33 @@ const TaskBar = () => {
       justify-between z-30
     '>
       <div className='flex h-full  items-start pb-8'>
+        <Drawer 
+          opened={opened} 
+          onClose={close} 
+          withCloseButton={false}
+          size={'sm'}
+          position='left'
+          overlayProps={{ backgroundOpacity: 0.0, blur: 0 }}
+          transitionProps={{ transition: 'pop-bottom-left', duration: 50, timingFunction: 'linear' }}
+          styles={{
+            content: {
+              marginTop: '24.2%',
+              backgroundColor: '#bdc3cd',
+              height: '50%',
+              borderTop: '2px solid white',
+              borderLeft: '2px solid black',
+              borderRight: '2px solid black',
+              "boxShadow":"0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+            }
+          }}
+        >
+          StartMenu
+        </Drawer>
+
         <CustomActionButton 
           className='w-20 h-8 flex justify-between pr-1' 
           onClick={() => {
-            if(states.Tasks.isStartMenuOpen) {
-              dispatch(SetIsStartMenuOpen(false))
-              return
-            }
-            dispatch(SetIsStartMenuOpen(true))
+            open()
           }}
         >
           <Image width="26" height="26" src="/assets/icons/task-bar-start.png" alt="vaporwave"/>

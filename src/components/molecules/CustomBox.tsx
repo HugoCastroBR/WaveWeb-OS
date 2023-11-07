@@ -28,7 +28,8 @@ interface CustomBoxProps {
   onRemove?: () => void
   removeOption?: boolean
   saveOption?: boolean
-  onClick?: () => void
+  onClick?: () => void,
+  customFocus?: string
 }
 const CustomBox = ({
   children,
@@ -51,6 +52,7 @@ const CustomBox = ({
   onRemove,
   removeOption,
   onClick,
+  customFocus
 }: CustomBoxProps) => {
 
   const {states, dispatch} = useStore()
@@ -65,6 +67,8 @@ const CustomBox = ({
     }
   }, [states.App.focusedItem])
 
+  const Folders = ['My Notes']
+
   return (
     <Draggable 
       handle='.handle' 
@@ -75,16 +79,21 @@ const CustomBox = ({
       <div
         className={`top-1/4
         bg-gray-300 ${closed && 'hidden'} ${minimized && 'hidden'}
-        z-20
+        z-10
         border-t-2 border-t-gray-100 border-l-2 border-l-gray-100
         border-r-2 border-r-gray-800 border-b-2 border-b-gray-800
         drop-shadow-sm shadow-sm shadow-gray-800 ${className} !overflow-hidden
         ${resize ? 'hover:resize' : ''}
         ${maximized ? ' !w-full !h-full !top-0 !left-0 cursor-auto' : ''}
-        ${isFocused ? ' !z-30' : ''}
+        ${isFocused ? ' !z-20' : ''}
         `}
         onClick={() => {
-          dispatch(AppSetFocusedItem(tittle))
+          if(customFocus) {
+            dispatch(AppSetFocusedItem(customFocus))
+          }else{
+            dispatch(AppSetFocusedItem(tittle))
+          }
+          
           onClick && onClick()
         }}
       >

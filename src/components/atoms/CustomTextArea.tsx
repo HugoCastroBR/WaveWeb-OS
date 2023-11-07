@@ -4,7 +4,6 @@ import React, { useEffect } from 'react'
 
 interface CustomTexeAreaProps {
   className?: string
-  defaultValue?: string
   onChange?: (value:string) => void
   value?: string
   label?: string
@@ -12,7 +11,6 @@ interface CustomTexeAreaProps {
 
 const CustomTextArea = ({
     className,
-    defaultValue,
     onChange,
     value,
     label
@@ -37,7 +35,6 @@ const CustomTextArea = ({
           onChange(e.target.value)
         }
       }}
-      defaultValue={defaultValue || ''}
       value={inputValue}
       className={`
       border-2 flex flex-col bg-gray-200 

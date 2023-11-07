@@ -58,7 +58,7 @@ const NotePadApp = () => {
   }
 
   useEffect(() => {
-    if (!states.Note.isEdit === false && states.App.confirmed === true) {
+    if (states.App.confirmed === true) {
       setIsSaveInputOpen(false)
       setFileName('')
       setFileContent('')
@@ -82,7 +82,7 @@ const NotePadApp = () => {
       tittle={fileName|| 'New Note'}
       className={`
         absolute top-64 left-64 w-3/12 h-3/6 bg-gray-300
-        mb-1 flex flex-col
+        mb-1 flex flex-col z-30
       `}
       icon={states.Tasks.NotePadTask.icon}
       withTaskBar

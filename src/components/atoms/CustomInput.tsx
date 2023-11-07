@@ -4,8 +4,7 @@ import React, { ChangeEvent, useEffect } from 'react'
 interface CustomInputProps {
   className?: string
   label: string
-  defaultValue?: string
-  onChange?: (value:string | ChangeEvent<HTMLInputElement>) => void
+  onChange?: (value:string | ChangeEvent<HTMLInputElement>) => void | ChangeEvent<HTMLInputElement>
   type?: string,
   value?: string
 }
@@ -13,7 +12,6 @@ interface CustomInputProps {
 const CustomInput = ({
   className,
   label,
-  defaultValue,
   onChange,
   type,
   value
@@ -38,7 +36,6 @@ const CustomInput = ({
       }}
       type={type || 'text'}
       id={`text-input-${label}`}
-      defaultValue={defaultValue || ''}
       className={`
         file:border-2 file:bg-gray-300 
         file:border-t-white  file:border-l-white
@@ -59,7 +56,6 @@ const CustomInput = ({
       }}
       type={type || 'text'}
       id={`text-input-${label}`}
-      defaultValue={defaultValue || ''}
       value={inputValue}
       className={`
       border-2 flex flex-col bg-gray-200 

@@ -69,7 +69,6 @@ const Desktop = () => {
       <NotePadApp />
       <TodoApp />
       <MusicApp />
-      <StartMenu />
       {DesktopItemProps.map((item, index) => {
         return (
           <DesktopIcon

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import CustomBox from '../molecules/CustomBox'
 import useStore from '@/hooks/useStore'
-import { FolderSetIsFolderMaximized, FolderSetIsFolderOpen, FolderSetIsFolderMinimized, NoteSetNotes, NoteSetCurrentNote, NoteSetIsEdit, TasksSetIsNotePadTaskOpen, TasksSetIsNotePadTaskMinimized } from '@/store/actions'
+import { FolderSetIsFolderMaximized, FolderSetIsFolderOpen, FolderSetIsFolderMinimized, NoteSetNotes, NoteSetCurrentNote, NoteSetIsEdit, TasksSetIsNotePadTaskOpen, TasksSetIsNotePadTaskMinimized, AppSetFocusedItem } from '@/store/actions'
 import { NoteProps, getNotes } from '@/api'
 import DesktopIcon from '../molecules/DesktopIcon'
 
@@ -16,18 +16,21 @@ const NoteFolder = () => {
     dispatch(NoteSetNotes(res))
   }
 
-  useEffect(() => {
-    handleLoadNotes()
-  },[states.Note.Notes])
+  // useEffect(() => {
+  //   handleLoadNotes()
+  // },[states.Note.Notes])
   
   useEffect(() => {
-    handleLoadNotes()
+    if(states.Folders.find(folder => folder.title === 'My Notes')?.isOpen) {
+      handleLoadNotes()
+    }
   }, [states.Folders.find(folder => folder.title === 'My Notes')?.isOpen])
 
   return (
     <CustomBox
       tittle='My Notes'
       icon='/assets/icons/note-folder.png'
+      customFocus={states.Note.currentNote.title}
       className={`
       absolute top-64 left-64 w-1/4 h-3/6 bg-gray-300
       mb-1 flex flex-col overflow-x-hidden overflow-y-auto
@@ -59,6 +62,7 @@ const NoteFolder = () => {
               text={note.title}
               onClick={() => {
                 console.log(note.title)
+                dispatch(AppSetFocusedItem(note.title))
                 dispatch(NoteSetCurrentNote({
                   id: note.id,
                   title: note.title,
