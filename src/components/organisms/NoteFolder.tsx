@@ -2,33 +2,110 @@
 import React, { useEffect, useState } from 'react'
 import CustomBox from '../molecules/CustomBox'
 import useStore from '@/hooks/useStore'
-import { FolderSetIsFolderMaximized, FolderSetIsFolderOpen, FolderSetIsFolderMinimized, NoteSetNotes, NoteSetCurrentNote, NoteSetIsEdit, TasksSetIsNotePadTaskOpen, TasksSetIsNotePadTaskMinimized, AppSetFocusedItem } from '@/store/actions'
-import { NoteProps, getNotes } from '@/api'
+import { FolderSetIsFolderMaximized, FolderSetIsFolderOpen, FolderSetIsFolderMinimized, NoteSetCurrentNote, NoteSetIsEdit, TasksSetIsNotePadTaskOpen, TasksSetIsNotePadTaskMinimized, AppSetFocusedItem, AppSetFileMenuOpen } from '@/store/actions'
 import DesktopIcon from '../molecules/DesktopIcon'
+import useStorage from '@/hooks/useStorage'
+import { formatDateToString } from '@/utils/date'
+
+
+
 
 const NoteFolder = () => {
 
   const {states, dispatch} = useStore()
+  const [notes, setNotes] = useState<string[] | undefined>([])
+  const [key, setKey] = useState('')
+  const [isFileMenuOpen, setIsFileMenuOpen] = useState(false)
+  const [isAboutMenuOpen, setIsAboutMenuOpen] = useState(false)
+
+  const {fs} = useStorage()
+  
 
 
-  const handleLoadNotes = async () => {
-    const res = await getNotes()
-    dispatch(NoteSetNotes(res))
+  const HandlerLoadFiles =  () => {
+    fs?.readdir('/My Notes', (err, files) => {
+      if(err){
+        console.log(err)
+      }else{
+        setNotes(files)
+      }
+    })
   }
 
-  // useEffect(() => {
-  //   handleLoadNotes()
-  // },[states.Note.Notes])
   
+
+
   useEffect(() => {
     if(states.Folders.find(folder => folder.title === 'My Notes')?.isOpen) {
-      handleLoadNotes()
+      HandlerLoadFiles()
     }
+
   }, [states.Folders.find(folder => folder.title === 'My Notes')?.isOpen])
+
+  useEffect(() => {
+    if(states.Folders.find(folder => folder.title === 'My Notes')?.isOpen) {
+      setKey(Math.random().toString())
+      HandlerLoadFiles()
+    }
+  }, [isFileMenuOpen,])
+
+  
+
+  const handlerLoadNote = async (note:string) => {
+    await fs?.readFile(`/My Notes/${note}`, (err, data) => {
+      const content = new TextDecoder('utf-8').decode(data)
+      let createdAt = ''
+      let updatedAt = ''
+
+      fs.stat(`/My Notes/${note}`, (err, stats) => {
+        createdAt = formatDateToString(stats?.atime)
+        updatedAt = formatDateToString(stats?.mtime)
+      })
+      if(err){
+        console.log(err)
+      }else{
+        dispatch(NoteSetCurrentNote({
+          id: 0,
+          title: note,
+          content,
+          createdAt,
+          updatedAt,
+        }))
+        dispatch(AppSetFocusedItem(note))
+        dispatch(NoteSetIsEdit(true))
+        dispatch(TasksSetIsNotePadTaskOpen(true))
+        dispatch(TasksSetIsNotePadTaskMinimized(false))
+      }
+    })
+  }
+
+
+
+  const RenderNotes = ({notes}:{notes:string[] | undefined}) => {
+    return (notes?.map((note,index) => {
+      return (
+        <DesktopIcon
+          key={index}
+          imgSrc='/assets/icons/note-pad-task.png'
+          text={String(note)}
+          onClick={() => {
+            handlerLoadNote(note)
+          }}
+        />
+      )
+    }))
+  }
+  
 
   return (
     <CustomBox
       tittle='My Notes'
+      onClick={() => {
+        HandlerLoadFiles()
+      }}
+      onMouseEnter={() => {
+        HandlerLoadFiles()
+      }}
       icon='/assets/icons/note-folder.png'
       customFocus={states.Note.currentNote.title}
       className={`
@@ -52,31 +129,37 @@ const NoteFolder = () => {
       setMinimized={() => {
         dispatch(FolderSetIsFolderMinimized('My Notes',true))
       }}
+      withTaskBar
+      refreshOption
+      newOption
+      fileMenuIsOpen={isFileMenuOpen}
+      closeFileMenu={(is:boolean) => {
+        setIsFileMenuOpen(is)
+      }}
+      aboutMenuIsOpen={isAboutMenuOpen}
+      closeAboutMenu={(is:boolean) => {
+        setIsAboutMenuOpen(is)
+      }}
+      onRefresh={() => {
+        HandlerLoadFiles()
+      }}
+      onNew={() => {
+        dispatch(NoteSetIsEdit(false))
+        dispatch(NoteSetCurrentNote({
+          id: 0,
+          title: '',
+          content: '',
+          createdAt: '',
+          updatedAt: '',
+        }))
+        dispatch(TasksSetIsNotePadTaskOpen(true))
+        dispatch(TasksSetIsNotePadTaskMinimized(false))
+        setIsFileMenuOpen(false)
+      }}
+
     >
       <div className='h-min  flex flex-wrap justify-start items-start'>
-        {states.Note.Notes.map(note => {
-          return (
-            <DesktopIcon
-              key={note.id}
-              imgSrc='/assets/icons/note-pad-task.png'
-              text={note.title}
-              onClick={() => {
-                console.log(note.title)
-                dispatch(AppSetFocusedItem(note.title))
-                dispatch(NoteSetCurrentNote({
-                  id: note.id,
-                  title: note.title,
-                  content: note.content,
-                  createdAt: note.createdAt,
-                  updatedAt: note.updatedAt
-                }))
-                dispatch(NoteSetIsEdit(true))
-                dispatch(TasksSetIsNotePadTaskOpen(true))
-                dispatch(TasksSetIsNotePadTaskMinimized(false))
-              }}
-            />
-          )
-        })}
+        <RenderNotes notes={notes} key={key}/>
       </div>
     </CustomBox>
   )

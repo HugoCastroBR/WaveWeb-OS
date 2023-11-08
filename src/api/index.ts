@@ -46,13 +46,13 @@ export const getMusics = async ():Promise<getMusic[]> => {
 
 
 export const getTodos = async ():Promise<TodoProps[]> => {
-  const response = await fetch(`${url}/todo`)
+  const response = await fetch(`api/todo`)
   const data = await response.json()
   return data
 }
 
 export const postTodo = async (title:string,content:string) => {
-  const response = await fetch(`${url}/todo`,{
+  const response = await fetch(`api/todo`,{
     method:'POST',
     headers:{
       'Content-Type':'application/json'
@@ -73,7 +73,7 @@ export const updateTodo = async (
   isDone:boolean
   ):Promise<TodoProps> => {
 
-  const response = await fetch(`${url}/todo/${id}`,{
+  const response = await fetch(`api/todo/${id}`,{
     method:'PATCH',
     headers:{
       'Content-Type':'application/json'
@@ -88,66 +88,10 @@ export const updateTodo = async (
   return data
 }
 export const removeTodo = async (id:number) => {
-  const response = await fetch(`${url}/todo/${id}`,{
+  const response = await fetch(`api/todo/${id}`,{
     method:'DELETE',
   })
   const data = await response.json()
   return data
 
-}
-
-
-
-export type NoteProps = {
-  id: number;
-  title: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export const postNote = async (title:string,content:string) => {
-  const response = await fetch(`${url}/note`,{
-    method:'POST',
-    headers:{
-      'Content-Type':'application/json'
-    },
-    body:JSON.stringify({
-      title,
-      content
-    })
-  })
-  const data = await response.json()
-  return data
-}
-
-
-
-export const getNotes = async ():Promise<NoteProps[]> => {
-  const response = await fetch(`${url}/note`)
-  const data = await response.json()
-  return data
-}
-
-export const updateNote = async (id:number,title:string,content:string):Promise<NoteProps[]> => {
-  const response = await fetch(`${url}/note/${id}`,{
-    method:'PATCH',
-    headers:{
-      'Content-Type':'application/json'
-    },
-    body:JSON.stringify({
-      title,
-      content
-    })
-  })
-  const data = await response.json()
-  return data
-}
-
-export const removeNote = async (id:number) => {
-  const response = await fetch(`${url}/note/${id}`,{
-    method:'DELETE',
-  })
-  const data = await response.json()
-  return data
 }

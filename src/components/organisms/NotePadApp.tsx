@@ -1,47 +1,73 @@
 'use client'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import CustomBox from '../molecules/CustomBox'
 import useStore from '@/hooks/useStore'
 import { TasksSetIsNotePadTaskMaximized, TasksSetIsNotePadTaskOpen, TasksSetIsNotePadTaskMinimized, AppHandlerNotification, SetNotification, AppSetConfirmed, FolderSetIsFolderOpen, NoteSetNotes, NoteSetIsEdit, NoteSetCurrentNote, AppSetAboutMenuOpen, AppSetFileMenuOpen } from '@/store/actions'
-import AppTaskBar from '../molecules/AppTaskBar'
 import CustomInput from '../atoms/CustomInput'
-import CustomActionButton from '../atoms/CustomActionButton'
-import { NoteProps, postNote, removeNote, updateNote } from '@/api'
-import wait from '@/utils/wait'
+
 import CustomTextArea from '../atoms/CustomTextArea'
+import useStorage from '@/hooks/useStorage'
+import { NoteProps } from '@/types'
+import CustomActionButton from '../atoms/CustomActionButton'
 
 
 const NotePadApp = () => {
 
+  
   const { states, dispatch } = useStore()
+  const {fs} = useStorage()
 
-  const [isSaveInputOpen, setIsSaveInputOpen] = React.useState(false)
-  const [fileName, setFileName] = React.useState(states.Note.isEdit && states.Note.currentNote.title || '')
-  const [fileContent, setFileContent] = React.useState(states.Note.isEdit && states.Note.currentNote.content || '')
+
+  const [isSaveAsInputOpen, setIsSaveAsInputOpen] = useState(false)
+  const [fileName, setFileName] = useState(states.Note.isEdit && states.Note.currentNote.title || '')
+  const [fileContent, setFileContent] = useState(states.Note.isEdit && states.Note.currentNote.content || '')
+
+  const [isFileMenuOpen, setIsFileMenuOpen] = useState(false)
+  const [isAboutMenuOpen, setIsAboutMenuOpen] = useState(false)
 
   const handleSaveNote = async () => {
     if (states.Note.isEdit) {
-      updateNote(states.Note.currentNote.id, fileName, fileContent)
+      await fs?.writeFile(`/My Notes/${fileName}`, fileContent, (err) => {
+        if(err){
+          console.log(err)
+        }else{
+          console.log('File Saved')
+        }
+      })
+      await setIsSaveAsInputOpen(false)
+      await dispatch(AppSetAboutMenuOpen(false))
+      await dispatch(AppSetFileMenuOpen(false))
+      await dispatch(AppSetFileMenuOpen(true))
+      await dispatch(AppSetFileMenuOpen(false))
+      setIsAboutMenuOpen(false)
+      setIsFileMenuOpen(false)
     } else {
-      const res = await postNote(fileName, fileContent)
-      dispatch(NoteSetNotes([...states.Note.Notes, res]))
-      dispatch(NoteSetIsEdit(true))
-      dispatch(NoteSetCurrentNote({
-        id: res.id,
-        title: res.title,
-        content: res.content,
-        createdAt: res.createdAt,
-        updatedAt: res.updatedAt
-      }))
+      await fs?.writeFile(`/My Notes/${fileName}.txt`, fileContent, (err) => {
+        if(err){
+          console.log(err)
+        }else{
+          console.log('File Saved')
+        }
+      })
+      await setIsSaveAsInputOpen(false)
+      await dispatch(AppSetAboutMenuOpen(false))
+      await dispatch(AppSetFileMenuOpen(false))
+      setIsAboutMenuOpen(false)
+      setIsFileMenuOpen(false)
     }
-    setIsSaveInputOpen(false)
-    dispatch(AppSetAboutMenuOpen(false))
-    dispatch(AppSetFileMenuOpen(false))
   }
 
+
   const handleDeleteNote = async () => {
-    const res = await removeNote(states.Note.currentNote.id)
-    dispatch(NoteSetNotes([...states.Note.Notes.filter(note => note.id !== res.id)]))
+    // const res = await removeNote(states.Note.currentNote.id)
+    // dispatch(NoteSetNotes([...states.Note.Notes.filter(note => note.id !== res.id)]))
+    await fs?.unlink(`/My Notes/${fileName}`, (err) => {
+      if(err){
+        console.log(err)
+      }else{
+        console.log('File Deleted')
+      }
+    })
     dispatch(NoteSetIsEdit(false))
     dispatch(NoteSetCurrentNote({
       id: 0,
@@ -50,7 +76,7 @@ const NotePadApp = () => {
       createdAt: '',
       updatedAt: ''
     }))
-    setIsSaveInputOpen(false)
+    setIsSaveAsInputOpen(false)
     dispatch(TasksSetIsNotePadTaskOpen(false))
     dispatch(TasksSetIsNotePadTaskMinimized(false))
     dispatch(AppSetAboutMenuOpen(false))
@@ -59,7 +85,7 @@ const NotePadApp = () => {
 
   useEffect(() => {
     if (states.App.confirmed === true) {
-      setIsSaveInputOpen(false)
+      setIsSaveAsInputOpen(false)
       setFileName('')
       setFileContent('')
       dispatch(NoteSetIsEdit(false))
@@ -74,6 +100,8 @@ const NotePadApp = () => {
   }, [states.App.confirmed])
 
   useEffect(() => {
+    setIsFileMenuOpen(false)
+    setIsAboutMenuOpen(false)
     setFileName(states.Note.currentNote.title)
   }, [states.Note.currentNote.title])
 
@@ -86,7 +114,8 @@ const NotePadApp = () => {
       `}
       icon={states.Tasks.NotePadTask.icon}
       withTaskBar
-      saveOption
+      saveOption={states.Note.isEdit}
+      saveAsOption
       removeOption={states.Note.isEdit}
       onRemove={() => {
         handleDeleteNote()
@@ -95,6 +124,14 @@ const NotePadApp = () => {
       minimized={states.Tasks.NotePadTask.isMinimized}
       maximized={states.Tasks.NotePadTask.isMaximized}
       resize
+      fileMenuIsOpen={isFileMenuOpen}
+      closeFileMenu={(is: boolean) => {
+        setIsFileMenuOpen(is)
+      }}
+      aboutMenuIsOpen={isAboutMenuOpen}
+      closeAboutMenu={(is: boolean) => {
+        setIsAboutMenuOpen(is)
+      }}
       setMaximized={() => {
         if (!states.Tasks.NotePadTask.isMaximized) {
           dispatch(TasksSetIsNotePadTaskMaximized(true))
@@ -108,13 +145,16 @@ const NotePadApp = () => {
       setMinimized={() => {
         dispatch(TasksSetIsNotePadTaskMinimized(true))
       }}
+      onSaveAs={() => {
+        setIsSaveAsInputOpen(true)
+      }}
       onSave={() => {
-        setIsSaveInputOpen(true)
+        handleSaveNote()
       }}
       
     >
       {
-        isSaveInputOpen &&
+        isSaveAsInputOpen &&
         <>
           <CustomBox
             tittle='Save'
@@ -122,7 +162,7 @@ const NotePadApp = () => {
             disableMinimize
             className='absolute top-12 left-12 flex flex-col w-80 !z-50 bg-gray-300'
             setClosed={() => {
-              setIsSaveInputOpen(false)
+              setIsSaveAsInputOpen(false)
             }}
           >
             <CustomInput

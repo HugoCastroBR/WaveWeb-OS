@@ -9,7 +9,7 @@ interface ItemTaskState {
   name: string,
   title: string,
   icon: string,
-  
+  secondPlane: boolean,
 }
 
 interface TasksState {
@@ -26,6 +26,7 @@ const initialState: TasksState = {
     name: "MusicTask",
     title: "Music",
     icon: '/assets/icons/music-task.png',
+    secondPlane: false,
   },
   TodoTask: {
     isOpen: false,
@@ -34,6 +35,7 @@ const initialState: TasksState = {
     name: "TodoTask",
     title: "Todo",
     icon: '/assets/icons/todo-task.png',
+    secondPlane: false,
   },
   NotePadTask: {
     isOpen: false,
@@ -42,6 +44,7 @@ const initialState: TasksState = {
     name: "NotePadTask",
     title: "NotePad",
     icon: '/assets/icons/note-pad-task.png',
+    secondPlane: false,
   },
   isStartMenuOpen: false,
 }
@@ -64,6 +67,9 @@ export const TasksSlice = createSlice({
     },
     SET_IS_TODO_TASK_OPEN(state,{payload}:{payload:boolean}){
       state.TodoTask.isOpen = payload
+    },
+    SET_IS_TODO_TASK_SECOND_PLANE(state,{payload}:{payload:boolean}){
+      state.TodoTask.secondPlane = payload
     },
     SET_IS_TODO_TASK_MINIMIZED(state,{payload}:{payload:boolean}){
       state.TodoTask.isMinimized = payload

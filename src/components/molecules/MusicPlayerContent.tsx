@@ -146,14 +146,22 @@ const MusicPlayerContent = ({
         <div className='h-1/5 w-full flex justify-center items-center'>
           <form className='flex h-full'>
             <div className='flex flex-col h-full w-1/2 justify-center'>
-              <CustomInput type='file' label='Upload a song:' className='w-full h-10 flex flex-col' 
+              <CustomInput 
+                type='file' 
+                accept='.mp3'
+                label='Upload a song:' 
+                className='w-full h-10 flex flex-col' 
                 onChange={(e:string | ChangeEvent<HTMLInputElement>) => {
                   if(typeof e !== 'string') {
                     setMusicFile(e.target.files?.[0] || null)
                   }
                 }}
               />
-              <CustomInput type='file' label='Upload a image:' className='w-full h-10 flex flex-col'
+              <CustomInput 
+                type='file' 
+                label='Upload a image:' 
+                className='w-full h-10 flex flex-col'
+                accept='image/jpeg'
                 onChange={(e:string | ChangeEvent<HTMLInputElement>) => {
                   if(typeof e !== 'string') {
                     setImageFile(e.target.files?.[0] || null)
