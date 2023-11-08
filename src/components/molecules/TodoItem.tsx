@@ -5,11 +5,11 @@ import React, { useEffect } from 'react'
 import CustomActionButton from '../atoms/CustomActionButton'
 import CustomText from '../atoms/CustomText'
 import { TodoProps } from '@/store/reducers/todo'
-import { getTodos, removeTodo, updateTodo } from '@/api'
 import { TodoSetTodos } from '@/store/actions'
 import wait from '@/utils/wait'
 import useStore from '@/hooks/useStore'
 import Image from 'next/image'
+import { getTodos, removeTodo, updateTodo } from '@/api'
 
 const TodoItem = ({
   content,
@@ -24,14 +24,12 @@ const TodoItem = ({
 
   const handlerLoadTodos = async () => {
     const response = await getTodos()
-    wait(1000)
     dispatch(TodoSetTodos(response))
     return response
   }
 
   const handlePatchTodo = async (done:boolean) => {
     const res = await updateTodo(id, title, content, done)
-    wait(1000)
     handlerLoadTodos()
     console.log(res)
 
@@ -41,7 +39,6 @@ const TodoItem = ({
   const handleRemoveTodo = async () => {
     const res = await removeTodo(id)
     console.log(res)
-    wait(1000)
     handlerLoadTodos()
   }
 

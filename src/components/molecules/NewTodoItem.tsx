@@ -4,13 +4,12 @@ import { title } from 'process'
 import React from 'react'
 import CustomActionButton from '../atoms/CustomActionButton'
 import CustomText from '../atoms/CustomText'
-import CustomBox from './CustomBox'
 import CustomInput from '../atoms/CustomInput'
-import { getTodos, postTodo } from '@/api'
 import wait from '@/utils/wait'
 import { TodoSetTodos } from '@/store/actions'
 import useStore from '@/hooks/useStore'
 import CustomTextArea from '../atoms/CustomTextArea'
+import { getTodos, postTodo } from '@/api'
 
 const NewTodoItem = () => {
 
@@ -29,7 +28,6 @@ const NewTodoItem = () => {
     console.log(res)
     setTitle('')
     setContent('')
-    wait(1000)
     handlerLoadTodos()
   }
 
@@ -140,4 +138,3 @@ const NewTodoItem = () => {
 }
 
 export default NewTodoItem
-

@@ -7,6 +7,7 @@ interface CustomInputProps {
   onChange?: (value:string | ChangeEvent<HTMLInputElement>) => void | ChangeEvent<HTMLInputElement>
   type?: string,
   value?: string
+  accept?: string
 }
 
 const CustomInput = ({
@@ -14,7 +15,8 @@ const CustomInput = ({
   label,
   onChange,
   type,
-  value
+  value,
+  accept
 }:CustomInputProps) => {
 
   const [inputValue, setInputValue] = React.useState(value || '')
@@ -36,6 +38,7 @@ const CustomInput = ({
       }}
       type={type || 'text'}
       id={`text-input-${label}`}
+      accept={accept}
       className={`
         file:border-2 file:bg-gray-300 
         file:border-t-white  file:border-l-white

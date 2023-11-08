@@ -24,12 +24,24 @@ interface CustomBoxProps {
   resize?: boolean
   withTaskBar?: boolean
   icon?: string
-  onSave?: () => void
+  onSaveAs?: () => void
   onRemove?: () => void
   removeOption?: boolean
+  saveAsOption?: boolean
+  onSave?: () => void
   saveOption?: boolean
-  onClick?: () => void,
+  onClick?: () => void
   customFocus?: string
+  refreshOption?: boolean
+  onRefresh?: () => void
+  newOption?: boolean
+  onNew?: () => void
+  fileMenuIsOpen?: boolean
+  closeFileMenu?: (is:boolean) => void
+  aboutMenuIsOpen?: boolean
+  closeAboutMenu?: (is:boolean) => void
+  onMouseOver?: (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+  onMouseEnter?: (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }
 const CustomBox = ({
   children,
@@ -47,12 +59,24 @@ const CustomBox = ({
   resize,
   withTaskBar,
   icon,
-  onSave,
-  saveOption,
+  onSaveAs,
+  saveAsOption,
   onRemove,
   removeOption,
   onClick,
-  customFocus
+  customFocus,
+  saveOption,
+  onSave,
+  refreshOption,
+  onRefresh,
+  newOption,
+  onNew,
+  fileMenuIsOpen,
+  closeFileMenu,
+  aboutMenuIsOpen,
+  closeAboutMenu,
+  onMouseOver,
+  onMouseEnter,
 }: CustomBoxProps) => {
 
   const {states, dispatch} = useStore()
@@ -67,7 +91,6 @@ const CustomBox = ({
     }
   }, [states.App.focusedItem])
 
-  const Folders = ['My Notes']
 
   return (
     <Draggable 
@@ -77,6 +100,12 @@ const CustomBox = ({
     >
       
       <div
+        onMouseOver={(e) => {
+          onMouseOver && onMouseOver(e)
+        }}
+        onMouseEnter={(e) => {
+          onMouseEnter && onMouseEnter(e)
+        }}
         className={`top-1/4
         bg-gray-300 ${closed && 'hidden'} ${minimized && 'hidden'}
         z-10
@@ -129,12 +158,28 @@ const CustomBox = ({
         </div>
         {withTaskBar && <AppTaskBar 
           saveOption={saveOption}
+          saveAsOption={saveAsOption}
           removeOption={removeOption}
+          refreshOption={refreshOption}
+          newOption={newOption}
+          fileMenuIsOpen={fileMenuIsOpen}
+          closeFileMenu={closeFileMenu}
+          aboutMenuIsOpen={aboutMenuIsOpen}
+          closeAboutMenu={closeAboutMenu}
+          onRefresh={() => {
+            onRefresh && onRefresh()
+          }}
           onRemove={() => {
             onRemove && onRemove()
           }}
+          onSaveAs={() => {
+            onSaveAs && onSaveAs()
+          }}
           onSave={() => {
             onSave && onSave()
+          }}
+          onNew={() => {
+            onNew && onNew()
           }}
         />}
         <div className='p-1 w-full h-full '>

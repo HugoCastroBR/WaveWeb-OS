@@ -2,8 +2,6 @@
 import React from 'react'
 import CustomText from '../atoms/CustomText'
 import CustomActionButton from '../atoms/CustomActionButton'
-import useStore from '@/hooks/useStore'
-import { AppSetFileMenuOpen, AppSetAboutMenuOpen } from '@/store/actions'
 
 
 interface AppTaskBarProps {
@@ -11,16 +9,35 @@ interface AppTaskBarProps {
   onSave?: () => void
   removeOption?: boolean
   onRemove?: () => void
+  saveAsOption?: boolean
+  onSaveAs?: () => void
+  refreshOption?: boolean
+  onRefresh?: () => void
+  newOption?: boolean
+  onNew?: () => void,
+  fileMenuIsOpen?: boolean
+  closeFileMenu?: (is:boolean) => void
+  aboutMenuIsOpen?: boolean
+  closeAboutMenu?: (is:boolean) => void
 }
 const AppTaskBar = ({
   onSave,
   saveOption,
   removeOption,
-  onRemove
-}:AppTaskBarProps) => {
+  onRemove,
+  saveAsOption,
+  onSaveAs,
+  refreshOption,
+  onRefresh,
+  newOption,
+  onNew,
+  closeFileMenu,
+  closeAboutMenu,
+  fileMenuIsOpen,
+  aboutMenuIsOpen,
+}: AppTaskBarProps) => {
 
-  const {states, dispatch} = useStore()
-
+ 
 
 
   return (
@@ -34,7 +51,7 @@ const AppTaskBar = ({
           <CustomActionButton
             className='h-8 w-24 !justify-start '
             onClick={() => {
-              dispatch(AppSetFileMenuOpen(!states.App.isFileMenuOpen))
+              closeFileMenu && closeFileMenu(!fileMenuIsOpen)
             }}
           >
             <CustomText
@@ -45,7 +62,7 @@ const AppTaskBar = ({
           <CustomActionButton
             className='h-8 w-24 !justify-start '
             onClick={() => {
-              dispatch(AppSetAboutMenuOpen(!states.App.isAboutMenuOpen))
+              closeAboutMenu && closeAboutMenu(!aboutMenuIsOpen)
             }}
           >
             <CustomText
@@ -56,59 +73,107 @@ const AppTaskBar = ({
         </div>
       </div>
       {
-        states.App.isFileMenuOpen &&
-        <div 
-        className='
+        fileMenuIsOpen &&
+        <div
+          className='
           absolute top-16 w-24 h-32 bg-gray-200 flex flex-col
           border-t-2 border-t-gray-100 border-l-2 border-l-gray-100
           border-r-2 border-r-gray-800 border-b-2 border-b-gray-800
-          drop-shadow-sm shadow-sm shadow-gray-800 pt-px pl-0
+          drop-shadow-sm shadow-sm shadow-gray-800 pt-px pl-0 z-40
         '>
           {
-          saveOption && 
-            <CustomActionButton 
-            className='!justify-start mt-px'
-            onClick={() => {
-              if(onSave) {
-                onSave()
-              }
-            }}
-          >
-            <CustomText
-              text='Save'
-              className='text-sm text-start'
-            />
-          </CustomActionButton>
+            refreshOption &&
+            <CustomActionButton
+              className='!justify-start mt-px'
+              onClick={() => {
+                if (onRefresh) {
+                  onRefresh()
+                }
+              }}
+            >
+              <CustomText
+                text='Refresh'
+                className='text-sm text-start'
+              />
+            </CustomActionButton>
+          }
+          {
+            newOption &&
+            <CustomActionButton
+              className='!justify-start mt-px'
+              onClick={() => {
+                if (onNew) {
+                  onNew()
+                }
+              }}
+            >
+              <CustomText
+                text='New'
+                className='text-sm text-start'
+              />
+            </CustomActionButton>
+          }
+          {
+            saveOption &&
+            <CustomActionButton
+              className='!justify-start mt-px'
+              onClick={() => {
+                if (onSave) {
+                  onSave()
+                }
+              }}
+            >
+              <CustomText
+                text='Save'
+                className='text-sm text-start'
+              />
+            </CustomActionButton>
+          }
+          {
+            saveAsOption &&
+            <CustomActionButton
+              className='!justify-start mt-px'
+              onClick={() => {
+                if (onSaveAs) {
+                  onSaveAs()
+                }
+              }}
+            >
+              <CustomText
+                text='Save As'
+                className='text-sm text-start'
+              />
+            </CustomActionButton>
           }
           {
             removeOption &&
-            <CustomActionButton 
-            className='!justify-start mt-px'
-            onClick={() => {
-              if(onRemove) {
-                onRemove()
-              }
-            }}
-          >
-            <CustomText
-              text='Remove'
-              className='text-sm text-start'
-            />
-          </CustomActionButton>
+            <CustomActionButton
+              className='!justify-start mt-px'
+              onClick={() => {
+                if (onRemove) {
+                  onRemove()
+                }
+              }}
+            >
+              <CustomText
+                text='Delete'
+                className='text-sm text-start'
+              />
+            </CustomActionButton>
           }
         </div>
       }
       {
-        states.App.isAboutMenuOpen &&
-        <div 
-        className='
+        aboutMenuIsOpen &&
+        <div
+          className='
           left-24
           absolute top-16 w-24 h-32 bg-gray-200 flex flex-col
           border-t-2 border-t-gray-100 border-l-2 border-l-gray-100
           border-r-2 border-r-gray-800 border-b-2 border-b-gray-800
           drop-shadow-sm shadow-sm shadow-gray-800 px-px pl-0
         '>
-          <CustomActionButton 
+          <CustomActionButton
             className='!justify-start mt-px'
           >
             <CustomText
@@ -116,7 +181,7 @@ const AppTaskBar = ({
               className='text-sm text-start'
             />
           </CustomActionButton>
-          <CustomActionButton 
+          <CustomActionButton
             className='!justify-start mt-px'
           >
             <CustomText
@@ -126,8 +191,8 @@ const AppTaskBar = ({
           </CustomActionButton>
         </div>
       }
-      
-      
+
+
     </>
   )
 }

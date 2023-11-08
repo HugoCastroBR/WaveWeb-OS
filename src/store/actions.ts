@@ -2,7 +2,8 @@
 import { SpotifySearchMusic } from '@/api/spotify';
 import { AppActions,AuthActions,TasksActions,MusicsActions, TodoActions,FoldersActions, NoteActions } from './index';
 import { TodoProps } from './reducers/todo';
-import { NoteProps } from '@/api';
+import { NoteProps } from '@/types';
+
 
 
 
