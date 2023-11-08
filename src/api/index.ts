@@ -9,16 +9,18 @@ export const verifyHealth = async () => {
 }
 
 export const uploadMusic = async (song: File, image: File, title: string,artist:string) => {
-  const formData = new FormData();
-  formData.append('files', song, 'sound.mp3');
-  formData.append('files', image, 'image.jpg');
+  const data = new FormData();
+  data.append('file', song, 'sound.mp3');
+  data.append('image', image, 'image.jpg');
+  data.append('title', title);
+  data.append('artist', artist);
+  // console.log(formData)
 
 
-  const response = await fetch(`${url}/music/upload/${artist}/${title}`, {
+  const response = await fetch(`api/music`, {
     method: 'POST',
-    body: formData
+    body: data
   });
-
   if (response.ok) {
     const data = await response.json();
     return data;
@@ -38,7 +40,7 @@ export type getMusic = {
 }
 
 export const getMusics = async ():Promise<getMusic[]> => {
-  const response = await fetch(`${url}/music`)
+  const response = await fetch(`api/music`)
   const data = await response.json()
   return data
 }

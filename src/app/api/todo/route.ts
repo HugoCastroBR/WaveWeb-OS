@@ -1,6 +1,5 @@
 import prisma from "@/utils/connect"
 import { NextResponse } from "next/server"
-import { TodoProps } from "@/store/reducers/todo"
 
 export async function GET(req: Request, res: Response) {
   try {
@@ -11,10 +10,6 @@ export async function GET(req: Request, res: Response) {
   }
 }
 
-interface CreateTodoRequest {
-  title: string;
-  content: string;
-}
 
 export async function POST(req: Request, res: Response) {
   

@@ -4,6 +4,14 @@ const nextConfig = {
     // as of Next.js latest versions, the nextRuntime is preferred over `isServer`, because of edge-runtime
     return config;
   },
+  async rewrites() {
+    return [
+      {
+        source: '/songs/:path*',
+        destination: '/public/songs/:path*',
+      }
+    ]
+  },
   images: {
     remotePatterns: [
       {
