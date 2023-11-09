@@ -1,18 +1,18 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import CustomActionButton from '../atoms/CustomActionButton'
 import CustomText from '../atoms/CustomText'
 import useSystem from '@/hooks/useSystem'
 import SystemApp from '../molecules/SystemApp'
-import useSystemTasks, { SystemTask } from '@/hooks/useSystemTasks'
-import useStore from '@/hooks/useStore'
-import { RightMenuItemProps } from '@/types'
+import useSystemTasks from '@/hooks/useSystemTasks'
+import { verifyIfIsFile } from '@/utils/files'
+import RightMenuItem from '../molecules/RightMenuItem'
+import NotePadApp from './NotePadApp'
 
 
 const SystemManager = () => {
 
   const {
-    mainPath,
     LoadMainPath,
     CreateFolder,
     currentPath,
@@ -27,36 +27,13 @@ const SystemManager = () => {
     RemoveSelectedItem,
   } = useSystemTasks()
 
-  const { states, dispatch } = useStore()
-
-  useEffect(() => {
-    console.log("load")
-    LoadMainPath()
-  }, [])
-
-
 
   const [isRightMenuOpen, setIsRightMenuOpen] = useState(false)
   const [x, setX] = useState(0)
   const [y, setY] = useState(0)
 
 
-
-  const RightMenuItem = ({
-    text,
-    onClick,
-  }: RightMenuItemProps) => {
-    return (
-      <CustomActionButton
-        onClick={onClick}
-        className='px-1 py-px'
-      >
-        <CustomText
-          text={text}
-        />
-      </CustomActionButton>
-    )
-  }
+  
   const MenuContext = () => {
     return (
       <div
@@ -137,6 +114,9 @@ const SystemManager = () => {
           height: 'calc(100% - 20px)',
         }}
       >
+        <div className='absolute bg-red-100 w-full h-full z-10'>
+          <NotePadApp/>
+        </div>
         {contentOfCurrentPath && contentOfCurrentPath.map((item, index) => {
           return (
             <SystemApp
@@ -157,13 +137,14 @@ const SystemManager = () => {
                     path: itemPath,
                   })
                 }
-
-                // console.log(selectedItems)
               }}
               onDoubleClick={(id, name) => {
                 const itemPath = `${currentPath}/${item}`.replaceAll('//', '/')
-                console.log("navigate to ", itemPath)
-                NavigateTo(itemPath)
+                if(verifyIfIsFile(name)){
+                  console.log("open file",name)
+                }else{
+                  NavigateTo(itemPath)
+                }
               }}
             />
           )

@@ -7,10 +7,12 @@ import { TodoSlice } from "./reducers/todo";
 import { FoldersSlice } from "./reducers/folders";
 import { NoteSlice } from "./reducers/notes";
 import { SystemSlice } from "./reducers/system";
+import { ProcessSlice } from "./reducers/process";
 
 const store = configureStore({
   reducer:{
     System:SystemSlice.reducer,
+    Process:ProcessSlice.reducer,
     App:AppSlice.reducer,
     Auth:AuthSlice.reducer,
     Tasks:TasksSlice.reducer,
@@ -32,3 +34,4 @@ export const MusicsActions = MusicsSlice.actions
 export const TodoActions = TodoSlice.actions
 export const NoteActions = NoteSlice.actions
 export const SystemActions = SystemSlice.actions
+export const ProcessActions = ProcessSlice.actions

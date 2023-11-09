@@ -1,9 +1,10 @@
 
 import { SpotifySearchMusic } from '@/api/spotify';
-import { AppActions,AuthActions,TasksActions,MusicsActions, TodoActions,FoldersActions, NoteActions, SystemActions } from './index';
+import { ProcessActions, AppActions,AuthActions,TasksActions,MusicsActions, TodoActions,FoldersActions, NoteActions, SystemActions } from './index';
 import { TodoProps } from './reducers/todo';
 import { NoteProps } from '@/types';
 import { SystemTask } from '@/hooks/useSystemTasks';
+import { processInstance } from './reducers/process';
 
 
 
@@ -15,7 +16,16 @@ export const SystemRemoveSelectedItem = (value: SystemTask) => {
 }
 export const SystemClearSelectedItems = () => {
   return SystemActions.CLEAR_SELECTED_ITEMS()
+}
 
+export const ProcessAddProcessInstance = (value:processInstance) => {
+  return ProcessActions.ADD_PROCESS_INSTANCE(value)
+}
+export const ProcessRemoveProcessInstance = (value:processInstance) => {
+  return ProcessActions.REMOVE_PROCESS_INSTANCE(value)
+}
+export const ProcessClearProcessInstance = () => {
+  return ProcessActions.CLEAR_PROCESS_INSTANCE()
 }
 
 
