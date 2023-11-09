@@ -35,6 +35,9 @@ const TodoApp = () => {
       closed={!states.Tasks.TodoTask.isOpen}
       minimized={states.Tasks.TodoTask.isMinimized}
       maximized={states.Tasks.TodoTask.isMaximized}
+      onMouseEnter={() => {
+        handlerLoadTodos()
+      }}
       setMaximized={() => {
         if(!states.Tasks.TodoTask.isMaximized) {
           dispatch(TasksSetIsTodoTaskMaximized(true))

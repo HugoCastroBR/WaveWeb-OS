@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from 'react'
+import React from 'react'
 import DesktopIcon from '../molecules/DesktopIcon'
 import useStore from '@/hooks/useStore'
 import { FolderSetIsFolderMinimized, FolderSetIsFolderOpen, TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskOpen, TasksSetIsNotePadTaskOpen, TasksSetIsTodoTaskMinimized, TasksSetIsTodoTaskOpen } from '@/store/actions'
@@ -9,7 +9,6 @@ import NotePadApp from './NotePadApp'
 import NoteFolder from './NoteFolder'
 import CustomAlert from './CustomAlert'
 
-
 interface DesktopItemProps {
   onClick?: () => void
   imgSrc: string
@@ -18,8 +17,6 @@ interface DesktopItemProps {
 
 
 const Desktop = () => {
-
-
 
   const DesktopItemProps: DesktopItemProps[] = [
     {
@@ -58,8 +55,8 @@ const Desktop = () => {
 
   const {states, dispatch} = useStore()
   
-
   
+
   return (
     <div 
     className='

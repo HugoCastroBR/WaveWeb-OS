@@ -15,3 +15,8 @@ export type MusicProps = {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface MultiTaskType {
+  isOpen: boolean,
+  id: number,
+}

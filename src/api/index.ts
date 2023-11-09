@@ -1,12 +1,5 @@
 import { TodoProps } from "@/store/reducers/todo"
 
-const url = 'http://localhost:3333'
-
-export const verifyHealth = async () => {
-  const response = await fetch(`${url}/health`)
-  const data = await response.json()
-  return data
-}
 
 export const uploadMusic = async (song: File, image: File, title: string,artist:string) => {
   const data = new FormData();

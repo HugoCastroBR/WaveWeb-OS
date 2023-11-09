@@ -10,9 +10,7 @@ import { SpotifySearchMusic } from '@/api/spotify'
 import useStore from '@/hooks/useStore'
 import { MusicsSetCurrentSong, MusicsSetSongName, MusicsSetArtists, MusicsSetCurrentSongImage, MusicsSetMusicIndex, MusicsSetCurrentSongLength, MusicsSetIsLocal, MusicsSetSongIsPaused, MusicsSetSongIsPlaying } from '@/store/actions'
 import { formatSecondsToMinutes, getMP3Duration } from '@/utils/audio'
-import musics from '../../../public/songs/musics.json'
-import { getMusic, getMusics, uploadMusic, verifyHealth } from '@/api'
-import wait from '@/utils/wait'
+import { getMusic, getMusics, uploadMusic } from '@/api'
 
 
 interface MySongProps {
@@ -126,7 +124,6 @@ const MusicPlayerContent = ({
   const RenderLocalMusics = ( ) => {
     return(
       localMusics.map((music, index) => {
-        console.log(music)
         return (
           <MySong
             artistName={music.artist}

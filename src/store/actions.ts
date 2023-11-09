@@ -6,7 +6,6 @@ import { NoteProps } from '@/types';
 
 
 
-
 export const SetNotification = (value: boolean) => {
   return AppActions.SET_NOTIFICATION(value)
 }
