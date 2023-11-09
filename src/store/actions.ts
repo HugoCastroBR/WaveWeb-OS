@@ -1,9 +1,22 @@
 
 import { SpotifySearchMusic } from '@/api/spotify';
-import { AppActions,AuthActions,TasksActions,MusicsActions, TodoActions,FoldersActions, NoteActions } from './index';
+import { AppActions,AuthActions,TasksActions,MusicsActions, TodoActions,FoldersActions, NoteActions, SystemActions } from './index';
 import { TodoProps } from './reducers/todo';
 import { NoteProps } from '@/types';
+import { SystemTask } from '@/hooks/useSystemTasks';
 
+
+
+export const SystemAddSelectedItem = (value: SystemTask) => {
+  return SystemActions.ADD_SELECTED_ITEM(value)
+}
+export const SystemRemoveSelectedItem = (value: SystemTask) => {
+  return SystemActions.REMOVE_SELECTED_ITEM(value)
+}
+export const SystemClearSelectedItems = () => {
+  return SystemActions.CLEAR_SELECTED_ITEMS()
+
+}
 
 
 export const SetNotification = (value: boolean) => {

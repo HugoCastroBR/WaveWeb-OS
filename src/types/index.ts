@@ -20,3 +20,8 @@ export interface MultiTaskType {
   isOpen: boolean,
   id: number,
 }
+
+export type RightMenuItemProps = {
+  text: string
+  onClick: () => void
+}
