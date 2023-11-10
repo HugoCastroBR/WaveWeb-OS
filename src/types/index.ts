@@ -25,3 +25,11 @@ export type RightMenuItemProps = {
   text: string
   onClick: () => void
 }
+
+export type WindowProcessProps = {
+  id: number,
+  uniqueId: string,
+  title?: string,
+  path?: string,
+  
+}

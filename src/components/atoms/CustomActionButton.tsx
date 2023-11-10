@@ -28,7 +28,7 @@ const CustomActionButton = ({
 
   if(disabled) return (
     <button className={` ${className}
-      flex bg-gray-400 z-50 
+      flex bg-gray-400 z-10 
       border-t-2 border-t-gray-800 border-l-2 border-l-gray-800
       border-r-2 border-r-gray-100 border-b-2 border-b-gray-100
       justify-center items-center

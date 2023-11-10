@@ -7,190 +7,79 @@ import CustomInput from '../atoms/CustomInput'
 
 import CustomTextArea from '../atoms/CustomTextArea'
 import useStorage from '@/hooks/useStorage'
-import { NoteProps } from '@/types'
+import { NoteProps, WindowProcessProps } from '@/types'
 import CustomActionButton from '../atoms/CustomActionButton'
+import Window from '../molecules/Window'
+import { processInstance } from '@/store/reducers/process'
+import AppTaskBar from '../molecules/AppTaskBar'
+import usePath from '@/hooks/usePath'
 
 
-const NotePadApp = () => {
+type notePadProcess = WindowProcessProps & {
+  onChange?: (value:string) => void
+}
+
+const NotePadApp = ({
+  id,
+  title,
+  uniqueId,
+  onChange,
+  path,
+}:notePadProcess) => {
 
   
   const { states, dispatch } = useStore()
-  const {fs} = useStorage()
+  const { fs } = useStorage()
+  
 
 
-  const [isSaveAsInputOpen, setIsSaveAsInputOpen] = useState(false)
-  const [fileName, setFileName] = useState(states.Note.isEdit && states.Note.currentNote.title || '')
-  const [fileContent, setFileContent] = useState(states.Note.isEdit && states.Note.currentNote.content || '')
-
+  const [fileContent, setFileContent] = useState('')
   const [isFileMenuOpen, setIsFileMenuOpen] = useState(false)
-  const [isAboutMenuOpen, setIsAboutMenuOpen] = useState(false)
-
-  const handleSaveNote = async () => {
-    if (states.Note.isEdit) {
-      await fs?.writeFile(`/My Notes/${fileName}`, fileContent, (err) => {
-        if(err){
-          console.log(err)
-        }else{
-          console.log('File Saved')
-        }
-      })
-      await setIsSaveAsInputOpen(false)
-      await dispatch(AppSetAboutMenuOpen(false))
-      await dispatch(AppSetFileMenuOpen(false))
-      await dispatch(AppSetFileMenuOpen(true))
-      await dispatch(AppSetFileMenuOpen(false))
-      setIsAboutMenuOpen(false)
-      setIsFileMenuOpen(false)
-    } else {
-      await fs?.writeFile(`/My Notes/${fileName}.txt`, fileContent, (err) => {
-        if(err){
-          console.log(err)
-        }else{
-          console.log('File Saved')
-        }
-      })
-      await setIsSaveAsInputOpen(false)
-      await dispatch(AppSetAboutMenuOpen(false))
-      await dispatch(AppSetFileMenuOpen(false))
-      setIsAboutMenuOpen(false)
-      setIsFileMenuOpen(false)
-    }
-  }
 
 
-  const handleDeleteNote = async () => {
-    // const res = await removeNote(states.Note.currentNote.id)
-    // dispatch(NoteSetNotes([...states.Note.Notes.filter(note => note.id !== res.id)]))
-    await fs?.unlink(`/My Notes/${fileName}`, (err) => {
+
+
+  const saveFile = async () => {
+    console.log("saveFile",fs)
+    await fs?.writeFile(`${path}`, fileContent, (err) => {
       if(err){
         console.log(err)
       }else{
-        console.log('File Deleted')
+        console.log('File Saved')
       }
     })
-    dispatch(NoteSetIsEdit(false))
-    dispatch(NoteSetCurrentNote({
-      id: 0,
-      title: '',
-      content: '',
-      createdAt: '',
-      updatedAt: ''
-    }))
-    setIsSaveAsInputOpen(false)
-    dispatch(TasksSetIsNotePadTaskOpen(false))
-    dispatch(TasksSetIsNotePadTaskMinimized(false))
-    dispatch(AppSetAboutMenuOpen(false))
-    dispatch(AppSetFileMenuOpen(false))
   }
 
   useEffect(() => {
-    if (states.App.confirmed === true) {
-      setIsSaveAsInputOpen(false)
-      setFileName('')
-      setFileContent('')
-      dispatch(NoteSetIsEdit(false))
-      dispatch(NoteSetCurrentNote({} as NoteProps))
-      dispatch(TasksSetIsNotePadTaskMaximized(false))
-      dispatch(TasksSetIsNotePadTaskOpen(false))
-      dispatch(AppSetAboutMenuOpen(false))
-      dispatch(AppSetFileMenuOpen(false))
-      dispatch(SetNotification(false))
-      dispatch(AppSetConfirmed(false))
-    }
-  }, [states.App.confirmed])
+    // if(states.Process.instances[id].content){
+    //   setFileContent(states.Process.instances[id].content)
+    // }
+    console.log("states.Process.instances[id].content",states.Process.instances[id].content)
+  },[states.Process.instances[id].content])
 
-  useEffect(() => {
-    setIsFileMenuOpen(false)
-    setIsAboutMenuOpen(false)
-    setFileName(states.Note.currentNote.title)
-  }, [states.Note.currentNote.title])
+  useEffect(() => {},)
+
+
 
   return (
-    <CustomBox
-      tittle={fileName|| 'New Note'}
-      className={`
-        absolute top-64 left-64 w-3/12 h-3/6 bg-gray-300
-        mb-1 flex flex-col z-30
-      `}
-      icon={states.Tasks.NotePadTask.icon}
-      withTaskBar
-      saveOption={states.Note.isEdit}
-      saveAsOption
-      removeOption={states.Note.isEdit}
-      onRemove={() => {
-        handleDeleteNote()
-      }}
-      closed={!states.Tasks.NotePadTask.isOpen}
-      minimized={states.Tasks.NotePadTask.isMinimized}
-      maximized={states.Tasks.NotePadTask.isMaximized}
-      resize
-      fileMenuIsOpen={isFileMenuOpen}
-      closeFileMenu={(is: boolean) => {
-        setIsFileMenuOpen(is)
-      }}
-      aboutMenuIsOpen={isAboutMenuOpen}
-      closeAboutMenu={(is: boolean) => {
-        setIsAboutMenuOpen(is)
-      }}
-      setMaximized={() => {
-        if (!states.Tasks.NotePadTask.isMaximized) {
-          dispatch(TasksSetIsNotePadTaskMaximized(true))
-        } else {
-          dispatch(TasksSetIsNotePadTaskMaximized(false))
-        }
-      }}
-      setClosed={() => {
-        dispatch(AppHandlerNotification('NotePad', 'Are you sure you want to close NotePad?'))
-      }}
-      setMinimized={() => {
-        dispatch(TasksSetIsNotePadTaskMinimized(true))
-      }}
-      onSaveAs={() => {
-        setIsSaveAsInputOpen(true)
-      }}
-      onSave={() => {
-        handleSaveNote()
-      }}
-      
-    >
-      {
-        isSaveAsInputOpen &&
-        <>
-          <CustomBox
-            tittle='Save'
-            disableMaximize
-            disableMinimize
-            className='absolute top-12 left-12 flex flex-col w-80 !z-50 bg-gray-300'
-            setClosed={() => {
-              setIsSaveAsInputOpen(false)
-            }}
-          >
-            <CustomInput
-              className='w-full h-8 mb-2'
-              label='File name:'
-              value={states.Note.currentNote.title}
-              onChange={(e) => {
-                setFileName(String(e))
-              }}
-            />
-            <div className='flex w-full justify-end items-end'>
-              <CustomActionButton
-                className='p-px px-1'
-                onClick={handleSaveNote}
-              >
-                Save
-              </CustomActionButton>
-            </div>
-          </CustomBox>
-        </>
-      }
+    <>
+      <AppTaskBar
+        saveOption
+        fileMenuIsOpen={isFileMenuOpen}
+        closeFileMenu={setIsFileMenuOpen}
+        onSave={() => {
+          saveFile()
+        }}
+      />
       <CustomTextArea
-        value={states.Note.currentNote.content}
+        className='mt-1'
+        value={fileContent}
         onChange={(e) => {
+          onChange && onChange(e)
           setFileContent(String(e))
         }}
       />
-    </CustomBox>
+    </>
   )
 }
 

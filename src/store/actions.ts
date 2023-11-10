@@ -24,8 +24,12 @@ export const ProcessAddProcessInstance = (value:processInstance) => {
 export const ProcessRemoveProcessInstance = (value:processInstance) => {
   return ProcessActions.REMOVE_PROCESS_INSTANCE(value)
 }
-export const ProcessClearProcessInstance = () => {
-  return ProcessActions.CLEAR_PROCESS_INSTANCE()
+export const ProcessCloseProcessInstance = (value:processInstance) => {
+  return ProcessActions.CLOSE_PROCESS_INSTANCE(value)
+}
+export const ProcessSetContentProcessInstance = (value:processInstance) => {
+  return ProcessActions.SET_CONTENT_PROCESS_INSTANCE(value)
+  
 }
 
 

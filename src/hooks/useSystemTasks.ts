@@ -21,12 +21,6 @@ const useSystemTasks = () => {
 
   
 
-
-
-  useEffect(() => {
-    console.log('selected: ',states.System.selectedItems)
-  }, [states.System.selectedItems])
-
   return { AddSelectedItem, RemoveSelectedItem }
 }
 

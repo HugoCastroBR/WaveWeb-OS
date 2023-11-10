@@ -1,14 +1,21 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CustomActionButton from '../atoms/CustomActionButton'
 import CustomText from '../atoms/CustomText'
-import useSystem from '@/hooks/useSystem'
 import SystemApp from '../molecules/SystemApp'
 import useSystemTasks from '@/hooks/useSystemTasks'
-import { verifyIfIsFile } from '@/utils/files'
+import { getExtensionFromFileName, verifyIfIsFile } from '@/utils/files'
 import RightMenuItem from '../molecules/RightMenuItem'
 import NotePadApp from './NotePadApp'
-
+import useStore from '@/hooks/useStore'
+import usePath from '@/hooks/usePath'
+import useSystemProcess from '@/hooks/useSystemProcess'
+import Window from '../molecules/Window'
+import { generateRandomText } from '@/utils/process'
+import { Input } from 'postcss'
+import { ProcessCloseProcessInstance, ProcessSetContentProcessInstance } from '@/store/actions'
+import CustomBox from '../molecules/CustomBox'
+import { processInstance } from '@/store/reducers/process'
 
 const SystemManager = () => {
 
@@ -20,12 +27,20 @@ const SystemManager = () => {
     contentOfCurrentPath,
     goBack,
     DeleteSelects,
-  } = useSystem()
+    ReadFile,
+    CreateTxtFile,
+  } = usePath()
 
   const {
     AddSelectedItem,
     RemoveSelectedItem,
   } = useSystemTasks()
+
+  const { CreateProcess } = useSystemProcess()
+
+  const { states, dispatch } = useStore()
+
+  const { fs } = usePath()
 
 
   const [isRightMenuOpen, setIsRightMenuOpen] = useState(false)
@@ -33,14 +48,16 @@ const SystemManager = () => {
   const [y, setY] = useState(0)
 
 
-  
+
+
+  const [_temp, setTemp] = useState<processInstance>()
   const MenuContext = () => {
     return (
       <div
         className={`
         bg-gray-300 
           drop-shadow-sm shadow-sm shadow-gray-800 
-          flex flex-col w-32
+          flex flex-col w-32 z-40
       `}
         style={{
           position: 'absolute',
@@ -48,6 +65,12 @@ const SystemManager = () => {
           left: x,
           zIndex: 100,
         }}>
+        <RightMenuItem
+          text='New Text File'
+          onClick={() => {
+            CreateTxtFile('text')
+          }}
+        />
         <RightMenuItem
           text='New Folder'
           onClick={() => {
@@ -64,6 +87,18 @@ const SystemManager = () => {
     );
   };
 
+  const handleReadFile = async (path: string) => {
+    console.log(path)
+    console.log('string')
+    const res = await ReadFile(path,_temp)
+    const data = await res
+    return data
+  }
+
+  useEffect(() => {
+
+    console.log("load")
+  }, [])
 
   return (
     <div
@@ -80,6 +115,7 @@ const SystemManager = () => {
         LoadMainPath()
       }}
       className=' h-full p-2 flex flex-col overflow-clip
+      z-10 
       '
       style={{
         width: 'calc(100% - 8px)',
@@ -93,7 +129,7 @@ const SystemManager = () => {
         isRightMenuOpen &&
         <MenuContext />
       }
-      <div className='flex bg-gray-300 w-full h-9 items-center'>
+      <div className='flex bg-gray-300 w-full h-9 items-center z-10'>
         <CustomActionButton
           onClick={() => {
             goBack()
@@ -114,9 +150,48 @@ const SystemManager = () => {
           height: 'calc(100% - 20px)',
         }}
       >
-        <div className='absolute bg-red-100 w-full h-full z-10'>
-          <NotePadApp/>
-        </div>
+        {
+          states.Process.instances.filter(item => item).map((item, index) => {
+            const uniqueId = generateRandomText(10)
+            switch (item.type) {
+              case 'txt':
+                
+                return (
+                  <Window
+                    key={item.id}
+                    id={item.id}
+                    tittle={`${item.id}, ${item.tittle}`}
+                    uniqueId={uniqueId}
+                    closed={!item.isOpen}
+                    resize
+                    setClosed={(value) => {
+                      dispatch(ProcessCloseProcessInstance(item))
+                    }}
+                  >
+                    {item.type === 'txt' &&
+                      <NotePadApp
+                        id={item.id}
+                        title={item.tittle}
+                        path={item.path}
+                        uniqueId={uniqueId}
+                        onChange={(value) => {
+                          console.log(value)
+                        }}
+                      />
+                    }
+                  </Window>
+                )
+              default:
+                return (
+                  <CustomBox tittle='Error'>
+                    <CustomText
+                      text='No content'
+                    />
+                  </CustomBox>
+                )
+            }
+          })
+        }
         {contentOfCurrentPath && contentOfCurrentPath.map((item, index) => {
           return (
             <SystemApp
@@ -124,6 +199,22 @@ const SystemManager = () => {
               id={index}
               name={item}
               onClick={(id, name, selected) => {
+                const loadFile = async () => {
+                  fs?.readFile(`${currentPath}/${item}`.replaceAll('//', '/'), (err, data) => {
+                    if (err) {
+                      console.log('Error reading the file:', err);
+                    } else {
+                      const content = new TextDecoder('utf-8').decode(data);
+                      dispatch(ProcessSetContentProcessInstance({
+                        id: id,
+                        content,
+                        tittle: name,
+                        type: getExtensionFromFileName(name),
+                      }))
+                    }
+                  });
+                };
+                loadFile()
                 // NavigateTo(name)
                 const itemPath = `${currentPath}/${item}`.replaceAll('//', '/')
                 if (!selected) {
@@ -138,11 +229,29 @@ const SystemManager = () => {
                   })
                 }
               }}
-              onDoubleClick={(id, name) => {
+              onDoubleClick={async (id, name) => {
                 const itemPath = `${currentPath}/${item}`.replaceAll('//', '/')
-                if(verifyIfIsFile(name)){
-                  console.log("open file",name)
-                }else{
+                if (verifyIfIsFile(name)) {
+                  console.log(itemPath)
+                  setTemp({
+                    id: states.Process.instances.length,
+                    tittle: name,
+                    type: getExtensionFromFileName(name),
+                    path: itemPath,
+                    isOpen: true,
+                  })
+                  const _id = states.Process.instances.length
+                  const content = await handleReadFile(itemPath)
+                  console.log(content)
+                  CreateProcess({
+                    id: _id,
+                    tittle: name,
+                    type: getExtensionFromFileName(name),
+                    path: itemPath,
+                    content: content,
+                    isOpen: true,
+                  })
+                } else {
                   NavigateTo(itemPath)
                 }
               }}

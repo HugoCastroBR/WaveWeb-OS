@@ -49,7 +49,7 @@ const SystemApp = ({
   return (
     <div 
       className={`
-      flex flex-col w-20 h-20 justify-center items-center mt-2 cursor-pointer z-20
+      flex flex-col w-20 h-20 justify-center items-center mt-2 cursor-pointer z-10
       ${selected ? 'bg-gray-200' : ''}
       `}
       onClick={() => {
