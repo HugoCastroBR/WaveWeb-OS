@@ -5,6 +5,7 @@ import React, { useEffect } from 'react'
 interface CustomTexeAreaProps {
   className?: string
   onChange?: (value:string) => void
+  onClick?: () => void
   value?: string
   label?: string
 }
@@ -13,7 +14,8 @@ const CustomTextArea = ({
     className,
     onChange,
     value,
-    label
+    label,
+    onClick
   }:CustomTexeAreaProps
 ) => {
   const [inputValue, setInputValue] = React.useState(value || '')
@@ -29,6 +31,7 @@ const CustomTextArea = ({
         </label>
       }
       <textarea 
+      onClick={onClick}
       onChange={(e) => {
         setInputValue(e.target.value)
         if(onChange) {

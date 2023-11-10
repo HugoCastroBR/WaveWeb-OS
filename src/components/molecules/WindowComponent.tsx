@@ -23,9 +23,24 @@ interface WindowComponentProps {
   maximized?: boolean,
   setMaximized?: (maximized: boolean) => void
   resize?: boolean
+  withTaskBar?: boolean
   icon?: string
+  onSaveAs?: () => void
+  onRemove?: () => void
+  removeOption?: boolean
+  saveAsOption?: boolean
+  onSave?: () => void
+  saveOption?: boolean
   onClick?: () => void
   customFocus?: string
+  refreshOption?: boolean
+  onRefresh?: () => void
+  newOption?: boolean
+  onNew?: () => void
+  fileMenuIsOpen?: boolean
+  closeFileMenu?: (is:boolean) => void
+  aboutMenuIsOpen?: boolean
+  closeAboutMenu?: (is:boolean) => void
   onMouseOver?: (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }
 const WindowComponent = ({
@@ -43,9 +58,24 @@ const WindowComponent = ({
   maximized,
   setMaximized,
   resize,
+  withTaskBar,
   icon,
+  onSaveAs,
+  saveAsOption,
+  onRemove,
+  removeOption,
   onClick,
   customFocus,
+  saveOption,
+  onSave,
+  refreshOption,
+  onRefresh,
+  newOption,
+  onNew,
+  fileMenuIsOpen,
+  closeFileMenu,
+  aboutMenuIsOpen,
+  closeAboutMenu,
   onMouseOver,
 }: WindowComponentProps) => {
 
@@ -84,7 +114,7 @@ const WindowComponent = ({
         drop-shadow-sm shadow-sm shadow-gray-800 ${className} !overflow-hidden
         ${resize ? 'hover:resize' : ''}
         ${maximized ? ' !w-full !h-full !top-0 !left-0 cursor-auto' : ''}
-        ${!isFocused ? ' !z-20' : ''}
+        ${isFocused ? ' !z-20' : ''}
         `}
         onClick={() => {
           dispatch(ProcessSetProcessItemIsFocused({
@@ -124,6 +154,32 @@ const WindowComponent = ({
             }} />}
           </div>
         </div>
+        {withTaskBar && <AppTaskBar 
+          saveOption={saveOption}
+          saveAsOption={saveAsOption}
+          removeOption={removeOption}
+          refreshOption={refreshOption}
+          newOption={newOption}
+          fileMenuIsOpen={fileMenuIsOpen}
+          closeFileMenu={closeFileMenu}
+          aboutMenuIsOpen={aboutMenuIsOpen}
+          closeAboutMenu={closeAboutMenu}
+          onRefresh={() => {
+            onRefresh && onRefresh()
+          }}
+          onRemove={() => {
+            onRemove && onRemove()
+          }}
+          onSaveAs={() => {
+            onSaveAs && onSaveAs()
+          }}
+          onSave={() => {
+            onSave && onSave()
+          }}
+          onNew={() => {
+            onNew && onNew()
+          }}
+        />}
         <div className='p-1 w-full h-full '>
           {children}
         </div>

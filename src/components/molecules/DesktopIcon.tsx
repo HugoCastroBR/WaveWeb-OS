@@ -10,13 +10,19 @@ import { PathAddSelectedItem, PathRemoveSelectedItem } from '@/store/actions'
 interface DesktopIconProps {
   onClick?: (filepath:string) => void
   onDoubleClick?: (filepath:string) => void
-  file: string
+  img?: string,
+  deprecated?: boolean,
+  file: string,
+  pathname: string
 }
 
 const DesktopIcon = ({
   onClick,
   onDoubleClick,
   file,
+  img,
+  pathname,
+  deprecated,
 }:DesktopIconProps) => {
 
   const {states, dispatch} = useStore()
@@ -70,9 +76,9 @@ const DesktopIcon = ({
       onClick={handleOnClick}
       onDoubleClick={handleDoubleClick}
     >
-      <Image src={imgSrc} width={52} height={52} alt={`${file}`} />
+      <Image src={deprecated? img : imgSrc} width={52} height={52} alt={`${file}`} />
       <CustomText
-        className='text-sm -mt-0 font-semibold text-gray-800'
+        className='text-sm -mt-0 font-semibold text-gray-800 break-words text-center w-20'
         text={`${file}`}
       />
     </div>

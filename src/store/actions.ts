@@ -1,10 +1,26 @@
 
 import { SpotifySearchMusic } from '@/api/spotify';
-import { AppActions,ProcessActions, AuthActions, TasksActions, MusicsActions, TodoActions, FoldersActions, NoteActions, PathActions } from './index';
+import { SystemActions,AppActions,ProcessActions, AuthActions, TasksActions, MusicsActions, TodoActions, FoldersActions, NoteActions, PathActions } from './index';
 import { TodoProps } from './reducers/todo';
 import { NoteProps } from '@/types';
 import { pathProps } from './reducers/path';
 import { processItemProps } from './reducers/process';
+
+
+export const SystemExplorerSetIsOpen = (value: boolean) => {
+  return SystemActions.SET_EXPLORER_IS_OPEN(value)
+}
+export const SystemExplorerSetIsMinimized = (value: boolean) => {
+  return SystemActions.SET_EXPLORER_IS_MINIMIZED(value)
+}
+export const SystemExplorerSetIsMaximized = (value: boolean) => {
+  return SystemActions.SET_EXPLORER_IS_MAXIMIZED(value)
+}
+export const SystemExplorerSetIcon = (value: string) => {
+  return SystemActions.SET_EXPLORER_ICON(value)
+}
+
+
 
 
 

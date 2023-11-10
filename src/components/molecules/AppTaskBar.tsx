@@ -51,6 +51,7 @@ const AppTaskBar = ({
           <CustomActionButton
             className='h-8 w-24 !justify-start '
             onClick={() => {
+              console.log('file menu',fileMenuIsOpen)
               closeFileMenu && closeFileMenu(!fileMenuIsOpen)
             }}
           >
@@ -116,7 +117,7 @@ const AppTaskBar = ({
           {
             saveOption &&
             <CustomActionButton
-              className='!justify-start mt-px'
+              className='!justify-start mt-px z-30'
               onClick={() => {
                 if (onSave) {
                   onSave()

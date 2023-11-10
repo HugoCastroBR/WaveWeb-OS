@@ -8,9 +8,11 @@ import { FoldersSlice } from "./reducers/folders";
 import { NoteSlice } from "./reducers/notes";
 import { PathSlice } from "./reducers/path";
 import { ProcessSlice } from "./reducers/process";
+import { SystemSlice } from "./reducers/system";
 
 const store = configureStore({
   reducer:{
+    System:SystemSlice.reducer,
     Path:PathSlice.reducer,
     Process:ProcessSlice.reducer,
     App:AppSlice.reducer,
@@ -35,3 +37,4 @@ export const TodoActions = TodoSlice.actions
 export const NoteActions = NoteSlice.actions
 export const PathActions = PathSlice.actions
 export const ProcessActions = ProcessSlice.actions
+export const SystemActions = SystemSlice.actions
