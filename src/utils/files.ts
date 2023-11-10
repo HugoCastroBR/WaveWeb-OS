@@ -20,3 +20,10 @@ export const verifyIfIsFile = (filename: string) => {
   const parts = filename.split('.');
   return parts.length > 1;
 }
+
+
+export const removeExtension = (filename: string) => {
+  const parts = filename.split('.');
+  parts.pop();
+  return parts.join('.');
+}

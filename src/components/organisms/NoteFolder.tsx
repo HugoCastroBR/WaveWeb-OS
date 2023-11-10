@@ -109,9 +109,6 @@ const NoteFolder = () => {
       onClick={() => {
         HandlerLoadFiles()
       }}
-      onMouseEnter={() => {
-        HandlerLoadFiles()
-      }}
       icon='/assets/icons/note-folder.png'
       customFocus={states.Note.currentNote.title}
       className={`

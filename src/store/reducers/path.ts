@@ -55,11 +55,6 @@ export const PathSlice = createSlice({
     CLEAR_SELECTED_ITEMS(state){
       state.selectedItems = []
     },
-    SET_IS_OPEN(state,{payload}:{payload:{path:string,isOpen:boolean}}){
-      const pathIndex = state.paths.findIndex(path => path.path.includes(payload.path))
-      console.log(pathIndex)
-      // state.paths[pathIndex].isOpen = payload.isOpen
-    },
     
   }
 });

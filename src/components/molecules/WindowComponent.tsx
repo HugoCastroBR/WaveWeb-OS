@@ -6,9 +6,10 @@ import Draggable from 'react-draggable';
 import AppTaskBar from './AppTaskBar';
 import Image from 'next/image';
 import useStore from '@/hooks/useStore';
-import { AppSetFocusedItem } from '@/store/actions';
+import { AppSetFocusedItem, ProcessSetProcessItemIsFocused } from '@/store/actions';
 
-interface CustomBoxProps {
+interface WindowComponentProps {
+  uuid: string
   children: React.ReactNode
   tittle: string
   className?: string
@@ -22,27 +23,13 @@ interface CustomBoxProps {
   maximized?: boolean,
   setMaximized?: (maximized: boolean) => void
   resize?: boolean
-  withTaskBar?: boolean
   icon?: string
-  onSaveAs?: () => void
-  onRemove?: () => void
-  removeOption?: boolean
-  saveAsOption?: boolean
-  onSave?: () => void
-  saveOption?: boolean
   onClick?: () => void
   customFocus?: string
-  refreshOption?: boolean
-  onRefresh?: () => void
-  newOption?: boolean
-  onNew?: () => void
-  fileMenuIsOpen?: boolean
-  closeFileMenu?: (is:boolean) => void
-  aboutMenuIsOpen?: boolean
-  closeAboutMenu?: (is:boolean) => void
   onMouseOver?: (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }
-const CustomBox = ({
+const WindowComponent = ({
+  uuid,
   children,
   tittle,
   className,
@@ -56,38 +43,25 @@ const CustomBox = ({
   maximized,
   setMaximized,
   resize,
-  withTaskBar,
   icon,
-  onSaveAs,
-  saveAsOption,
-  onRemove,
-  removeOption,
   onClick,
   customFocus,
-  saveOption,
-  onSave,
-  refreshOption,
-  onRefresh,
-  newOption,
-  onNew,
-  fileMenuIsOpen,
-  closeFileMenu,
-  aboutMenuIsOpen,
-  closeAboutMenu,
   onMouseOver,
-}: CustomBoxProps) => {
+}: WindowComponentProps) => {
 
   const {states, dispatch} = useStore()
 
   const [isFocused, setIsFocused] = useState(false)
 
   useEffect(() => {
-    if(states.App.focusedItem === tittle) {
+    if(states.Process.focusedItem === uuid) {
       setIsFocused(true)
     } else {
       setIsFocused(false)
     }
-  }, [states.App.focusedItem])
+  }, [
+    states.Process.focusedItem
+  ])
 
 
   return (
@@ -95,6 +69,7 @@ const CustomBox = ({
       handle='.handle' 
       disabled={maximized} 
       position={maximized ? { x: 0, y: 0 } : undefined} 
+      key={uuid}
     >
       
       <div
@@ -103,21 +78,19 @@ const CustomBox = ({
         }}
         className={`top-1/4
         bg-gray-300 ${closed && 'hidden'} ${minimized && 'hidden'}
-        z-10
+        z-10 absolute
         border-t-2 border-t-gray-100 border-l-2 border-l-gray-100
         border-r-2 border-r-gray-800 border-b-2 border-b-gray-800
         drop-shadow-sm shadow-sm shadow-gray-800 ${className} !overflow-hidden
         ${resize ? 'hover:resize' : ''}
         ${maximized ? ' !w-full !h-full !top-0 !left-0 cursor-auto' : ''}
-        ${isFocused ? ' !z-20' : ''}
+        ${!isFocused ? ' !z-20' : ''}
         `}
         onClick={() => {
-          if(customFocus) {
-            dispatch(AppSetFocusedItem(customFocus))
-          }else{
-            dispatch(AppSetFocusedItem(tittle))
-          }
-          
+          dispatch(ProcessSetProcessItemIsFocused({
+            uuid,
+            isFocused: true
+          }))
           onClick && onClick()
         }}
       >
@@ -151,32 +124,6 @@ const CustomBox = ({
             }} />}
           </div>
         </div>
-        {withTaskBar && <AppTaskBar 
-          saveOption={saveOption}
-          saveAsOption={saveAsOption}
-          removeOption={removeOption}
-          refreshOption={refreshOption}
-          newOption={newOption}
-          fileMenuIsOpen={fileMenuIsOpen}
-          closeFileMenu={closeFileMenu}
-          aboutMenuIsOpen={aboutMenuIsOpen}
-          closeAboutMenu={closeAboutMenu}
-          onRefresh={() => {
-            onRefresh && onRefresh()
-          }}
-          onRemove={() => {
-            onRemove && onRemove()
-          }}
-          onSaveAs={() => {
-            onSaveAs && onSaveAs()
-          }}
-          onSave={() => {
-            onSave && onSave()
-          }}
-          onNew={() => {
-            onNew && onNew()
-          }}
-        />}
         <div className='p-1 w-full h-full '>
           {children}
         </div>
@@ -186,4 +133,4 @@ const CustomBox = ({
   )
 }
 
-export default CustomBox
+export default WindowComponent

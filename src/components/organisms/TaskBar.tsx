@@ -6,14 +6,15 @@ import CustomBox from '../molecules/CustomBox'
 import useStore from '@/hooks/useStore'
 import DesktopIcon from '../molecules/DesktopIcon'
 import TaskBarItem from '../molecules/TaskBarItem'
-import { TasksSetIsMusicTaskOpen, TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskMaximized, SetIsStartMenuOpen, TasksSetIsTodoTaskMinimized, TasksSetIsTodoTaskOpen, TasksSetIsNotePadTaskMinimized, TasksSetIsNotePadTaskOpen, FolderSetIsFolderMinimized, FolderSetIsFolderOpen } from '@/store/actions'
+import { TasksSetIsMusicTaskOpen, TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskMaximized, SetIsStartMenuOpen, TasksSetIsTodoTaskMinimized, TasksSetIsTodoTaskOpen, TasksSetIsNotePadTaskMinimized, TasksSetIsNotePadTaskOpen, FolderSetIsFolderMinimized, FolderSetIsFolderOpen, ProcessSetProcessItemIsMinimized } from '@/store/actions'
 import { useDisclosure } from '@mantine/hooks'
 import { Drawer } from '@mantine/core'
+import { removeExtension } from '@/utils/files'
 const TaskBar = () => {
 
   const [time, setTime] = React.useState('')
-  
-  const {states, dispatch} = useStore()
+
+  const { states, dispatch } = useStore()
 
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -30,7 +31,7 @@ const TaskBar = () => {
       setTime(currentTime);
     }
     displayCurrentTime();
-    setInterval(displayCurrentTime, 60000); 
+    setInterval(displayCurrentTime, 60000);
   }
 
   React.useEffect(() => {
@@ -42,10 +43,10 @@ const TaskBar = () => {
   }, [time])
 
 
-  const HandlerOnClick = (text:string) => {
+  const HandlerOnClick = (text: string) => {
     switch (text) {
       case 'Music':
-        if(states.Tasks.MusicTask.isMinimized) {
+        if (states.Tasks.MusicTask.isMinimized) {
           dispatch(TasksSetIsMusicTaskMinimized(false))
           break;
         }
@@ -54,7 +55,7 @@ const TaskBar = () => {
         // dispatch(TasksSetIsMusicTaskMaximized(false))
         break;
       case 'Todo List':
-        if(states.Tasks.TodoTask.isMinimized) {
+        if (states.Tasks.TodoTask.isMinimized) {
           dispatch(TasksSetIsTodoTaskMinimized(false))
           break;
         }
@@ -63,7 +64,7 @@ const TaskBar = () => {
         // dispatch(TasksSetIsTodoTaskMaximized(false))
         break;
       case 'Notepad':
-        if(states.Tasks.NotePadTask.isMinimized) {
+        if (states.Tasks.NotePadTask.isMinimized) {
           dispatch(TasksSetIsNotePadTaskMinimized(false))
           break;
         }
@@ -72,12 +73,12 @@ const TaskBar = () => {
         // dispatch(TasksSetIsNotePadTaskMaximized(false))
         break;
       case 'My Notes':
-        if(states.Folders.find(folder => folder.title === 'My Notes')?.isMinimized) {
-          dispatch(FolderSetIsFolderMinimized('My Notes',false))
+        if (states.Folders.find(folder => folder.title === 'My Notes')?.isMinimized) {
+          dispatch(FolderSetIsFolderMinimized('My Notes', false))
           break;
         }
-        dispatch(FolderSetIsFolderOpen('My Notes',true))
-        dispatch(FolderSetIsFolderMinimized('My Notes',true))
+        dispatch(FolderSetIsFolderOpen('My Notes', true))
+        dispatch(FolderSetIsFolderMinimized('My Notes', true))
         break;
       default:
         break;
@@ -92,9 +93,9 @@ const TaskBar = () => {
       justify-between z-30
     '>
       <div className='flex h-full  items-start pb-8'>
-        <Drawer 
-          opened={opened} 
-          onClose={close} 
+        <Drawer
+          opened={opened}
+          onClose={close}
           withCloseButton={false}
           size={'sm'}
           position='left'
@@ -108,24 +109,39 @@ const TaskBar = () => {
               borderTop: '2px solid white',
               borderLeft: '2px solid black',
               borderRight: '2px solid black',
-              "boxShadow":"0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+              "boxShadow": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
             }
           }}
         >
           StartMenu
         </Drawer>
 
-        <CustomActionButton 
-          className='w-20 h-8 flex justify-between pr-1' 
+        <CustomActionButton
+          className='w-20 h-8 flex justify-between pr-1'
           onClick={() => {
             open()
           }}
         >
-          <Image width="26" height="26" src="/assets/icons/task-bar-start.png" alt="vaporwave"/>
-            Start
+          <Image width="26" height="26" src="/assets/icons/task-bar-start.png" alt="vaporwave" />
+          Start
         </CustomActionButton>
-        
-        {
+
+        {states.Process.items.map(item => {
+          if (item?.isOpen) {
+            return <TaskBarItem
+              text={removeExtension(item.title)}
+              icon={item?.icon || '/assets/icons/file.png'}
+              onClick={() => {
+                dispatch(ProcessSetProcessItemIsMinimized({
+                  uuid: item.uuid,
+                  isMinimized: !item.isMinimized
+                }))
+              }}
+            />
+          }
+        })}
+
+        {/* {
         states.Tasks.MusicTask.isOpen 
         && 
         <TaskBarItem 
@@ -149,13 +165,7 @@ const TaskBar = () => {
         icon={states.Tasks.NotePadTask.icon}
         onClick={HandlerOnClick} />
         }
-        {
-        states.Folders.find(folder => folder.title === 'My Notes')?.isOpen &&
-        <TaskBarItem
-        text='My Notes'
-        icon='/assets/icons/note-folder.png'
-        onClick={HandlerOnClick} />
-        }
+        { */}
 
 
       </div>

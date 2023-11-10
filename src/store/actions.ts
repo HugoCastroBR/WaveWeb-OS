@@ -1,9 +1,10 @@
 
 import { SpotifySearchMusic } from '@/api/spotify';
-import { AppActions, AuthActions, TasksActions, MusicsActions, TodoActions, FoldersActions, NoteActions, PathActions } from './index';
+import { AppActions,ProcessActions, AuthActions, TasksActions, MusicsActions, TodoActions, FoldersActions, NoteActions, PathActions } from './index';
 import { TodoProps } from './reducers/todo';
 import { NoteProps } from '@/types';
 import { pathProps } from './reducers/path';
+import { processItemProps } from './reducers/process';
 
 
 
@@ -22,12 +23,39 @@ export const PathRemoveSelectedItem = (value: string) => {
 export const PathClearSelectedItems = () => {
   return PathActions.CLEAR_SELECTED_ITEMS()
 }
-export const PathSetIsOpen = (path:string,isOpen:boolean) => {
-  return PathActions.SET_IS_OPEN({
-    path,
-    isOpen
-  })
+
+
+export const ProcessAddProcessItem = (value: processItemProps) =>{
+  return ProcessActions.ADD_PROCESS_ITEM(value)
 }
+export const ProcessRemoveProcessItem = (uuid: string) =>{
+  return ProcessActions.REMOVE_PROCESS_ITEM(uuid)
+}
+export const ProcessSetProcessItem = (value: processItemProps) =>{
+  return ProcessActions.SET_PROCESS_ITEM(value)
+}
+export const ProcessSetProcessItemContent = (value: {uuid:string,content:any}) =>{
+  return ProcessActions.SET_PROCESS_ITEM_CONTENT(value)
+}
+export const ProcessSetProcessItemIsOpen = (value: {uuid:string,isOpen:boolean}) =>{
+  return ProcessActions.SET_PROCESS_ITEM_IS_OPEN(value)
+}
+export const ProcessSetProcessItemIsMinimized = (value: {uuid:string,isMinimized:boolean}) =>{
+  return ProcessActions.SET_PROCESS_ITEM_IS_MINIMIZED(value)
+}
+export const ProcessSetProcessItemIsMaximized = (value: {uuid:string,isMaximized:boolean}) =>{
+  return ProcessActions.SET_PROCESS_ITEM_IS_MAXIMIZED(value)
+}
+export const ProcessSetProcessItemIsRunning = (value: {uuid:string,isRunning:boolean}) =>{
+  return ProcessActions.SET_PROCESS_ITEM_IS_RUNNING(value)
+}
+export const ProcessSetProcessItemIsFocused = (value: {uuid:string,isFocused:boolean}) =>{
+  return ProcessActions.SET_PROCESS_ITEM_IS_FOCUSED(value)
+}
+export const ProcessSetProcessItemIcon = (value: {uuid:string,icon:string}) =>{
+  return ProcessActions.SET_PROCESS_ITEM_ICON(value)
+}
+
 
 
 export const SetNotification = (value: boolean) => {

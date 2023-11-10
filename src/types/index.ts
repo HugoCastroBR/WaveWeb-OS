@@ -15,3 +15,8 @@ export type MusicProps = {
   createdAt: string;
   updatedAt: string;
 }
+
+export type RightMenuItemProps = {
+  text: string
+  onClick: () => void
+}
