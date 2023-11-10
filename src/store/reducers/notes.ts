@@ -1,5 +1,5 @@
 
-import { NoteProps } from "@/api";
+import { NoteProps } from "@/types";
 import { createSlice } from "@reduxjs/toolkit";
 
 

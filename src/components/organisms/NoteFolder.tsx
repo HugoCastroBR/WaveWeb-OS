@@ -25,7 +25,13 @@ const NoteFolder = () => {
   const HandlerLoadFiles =  () => {
     fs?.readdir('/My Notes', (err, files) => {
       if(err){
-        console.log(err)
+        fs?.mkdir('/My Notes', (err) => {
+          if(err){
+            console.log(err)
+          }else{
+            console.log('Folder Created')
+          }
+        })
       }else{
         setNotes(files)
       }
@@ -49,7 +55,7 @@ const NoteFolder = () => {
     }
   }, [isFileMenuOpen,])
 
-  
+
 
   const handlerLoadNote = async (note:string) => {
     await fs?.readFile(`/My Notes/${note}`, (err, data) => {

@@ -1,10 +1,33 @@
 
 import { SpotifySearchMusic } from '@/api/spotify';
-import { AppActions,AuthActions,TasksActions,MusicsActions, TodoActions,FoldersActions, NoteActions } from './index';
+import { AppActions, AuthActions, TasksActions, MusicsActions, TodoActions, FoldersActions, NoteActions, PathActions } from './index';
 import { TodoProps } from './reducers/todo';
 import { NoteProps } from '@/types';
+import { pathProps } from './reducers/path';
 
 
+
+export const PathSetPath = (value: pathProps[]) => {
+  return PathActions.SET_PATH(value)
+}
+export const PathSetFiles = (value: {path:string,files:string[]}) => {
+  return PathActions.SET_FILES(value)
+}
+export const PathAddSelectedItem = (value: string) => {
+  return PathActions.ADD_SELECTED_ITEM(value)
+}
+export const PathRemoveSelectedItem = (value: string) => {
+  return PathActions.REMOVE_SELECTED_ITEM(value)
+}
+export const PathClearSelectedItems = () => {
+  return PathActions.CLEAR_SELECTED_ITEMS()
+}
+export const PathSetIsOpen = (path:string,isOpen:boolean) => {
+  return PathActions.SET_IS_OPEN({
+    path,
+    isOpen
+  })
+}
 
 
 export const SetNotification = (value: boolean) => {
@@ -28,6 +51,8 @@ export const AppSetFileMenuOpen = (value: boolean) => {
 export const AppSetAboutMenuOpen = (value: boolean) => {
   return AppActions.SET_ABOUT_MENU_OPEN(value)
 }
+
+
 
 
 export const FolderSetNoteFolderContent = (
