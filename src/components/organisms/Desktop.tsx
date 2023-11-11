@@ -18,6 +18,7 @@ import WindowComponent from '../molecules/WindowComponent'
 import Note from '../molecules/Note'
 import { processItemProps } from '@/store/reducers/process'
 import wait from '@/utils/wait'
+import CustomInput from '../atoms/CustomInput'
 
 
 interface DesktopItemProps {
@@ -91,6 +92,15 @@ const Desktop = () => {
   const reloadPath = async () => {
     await wait(100)
     console.log('reload')
+    await fs?.readdir('/', (err, files) => {
+      console.log("reloading Desktop")
+      setDesktopFiles(files.map((file) => {
+        return {
+          path: file,
+          isFile: verifyIfIsFile(file),
+        }
+      }))
+    })
 
     await fs?.readdir(currentPath, (err, files) => {
       if (err) console.log(err)
@@ -110,13 +120,19 @@ const Desktop = () => {
 
 
 
+
+
   const MenuContext = () => {
+
+
     return (
       <div
         className={`
-        bg-gray-300 
-          drop-shadow-sm shadow-sm shadow-gray-800 
-          flex flex-col w-32 z-40
+        bg-gray-500 
+          drop-shadow-md shadow-md shadow-gray-800 
+          flex flex-col w-40 z-40  
+          bg-opacity-5 backdrop-filter backdrop-blur-sm
+          py-2
       `}
         style={{
           position: 'absolute',
@@ -124,37 +140,44 @@ const Desktop = () => {
           left: x,
           zIndex: 100,
         }}>
+
         <RightMenuItem
           text='New Text File'
           onClick={() => {
-            fs?.writeFile(`${currentPath}/New Text File.txt`, '', (err) => {
-              if (err) console.log(err)
-              else {
-                console.log('File created')
-              }
-            })
+            setIsNewTextNameInputOpen(true)
+
             reloadPath()
             dispatch(PathClearSelectedItems())
+            fs?.readdir('/', (err, files) => {
+              setDesktopFiles(files.map((file) => {
+                return {
+                  path: file,
+                  isFile: verifyIfIsFile(file),
+                }
+              }))
+            })
           }}
         />
         <RightMenuItem
           text='New Folder'
           onClick={() => {
-            fs?.mkdir(`${currentPath}/Desktop`, (err) => {
-              if (err) console.log(err)
-              else {
-                console.log('Folder created')
-              }
-            })
+            setIsNewFolderNameInputOpen(true)
             reloadPath()
             dispatch(PathClearSelectedItems())
+            fs?.readdir('/', (err, files) => {
+              setDesktopFiles(files.map((file) => {
+                return {
+                  path: file,
+                  isFile: verifyIfIsFile(file),
+                }
+              }))
+            })
           }
           }
         />
         <RightMenuItem
           text='Delete'
           onClick={() => {
-
             states.Path.selectedItems.forEach((item) => {
               const itemToDelete = `${currentPath}/${item}`.replaceAll('//', '/')
 
@@ -176,12 +199,21 @@ const Desktop = () => {
             })
             reloadPath()
             dispatch(PathClearSelectedItems())
+            fs?.readdir('/', (err, files) => {
+              setDesktopFiles(files.map((file) => {
+                return {
+                  path: file,
+                  isFile: verifyIfIsFile(file),
+                }
+              }))
+            })
             // DeleteSelects()
           }}
         />
       </div>
     );
   };
+
 
 
   const { states, dispatch } = useStore()
@@ -237,54 +269,193 @@ const Desktop = () => {
   useEffect(() => {
     dispatch(PathClearSelectedItems())
     readPath(currentPath)
+    fs?.readdir('/', (err, files) => {
+      setDesktopFiles(files.map((file) => {
+        return {
+          path: file,
+          isFile: verifyIfIsFile(file),
+        }
+      }))
+    })
   }, [currentPath])
 
   useEffect(() => {
     readPath(currentPath)
+    fs?.readdir('/', (err, files) => {
+      setDesktopFiles(files.map((file) => {
+        return {
+          path: file,
+          isFile: verifyIfIsFile(file),
+        }
+      }))
+    })
     // console.log("load fs")
   }, [fs])
 
   const handlerFileType = (item: processItemProps) => {
     switch (item.extension) {
       case 'txt':
-        return <Note {...item} icon='/assets/icons/note-pad-task.png' />
+        return <Note
+          {...item}
+          icon='/assets/icons/note-pad-task.png'
+          onSaved={() => {
+            fs?.readdir('/', (err, files) => {
+              setDesktopFiles(files.map((file) => {
+                return {
+                  path: file,
+                  isFile: verifyIfIsFile(file),
+                }
+              }))
+            })
+          }}
+        />
       default:
         return <>text</>
     }
   }
 
-  const [IsExplorerOpen, setIsExplorerOpen] = useState(true)
 
   type FileItem = {
     path: string;
     isFile: boolean;
   };
+  const NewTextNameInput = () => {
+    const [textName, setTextName] = useState('New Text')
+    return (
+      <CustomBox
+        tittle='New Text'
+        className='!z-40 w-60 h-36 bg-gray-100 absolute top-1/2 left-1/3 transform -translate-x-1/2 -translate-y-1/2'
+        disableMaximize
+        disableMinimize
+        setClosed={() => {
+          setIsNewTextNameInputOpen(false)
+        }}
+        closed={!IsNewTextNameInputOpen}
+      >
+        <CustomInput
+          label='Text file name: '
+          value='New Text'
+          onChange={(e) => {
+            setTextName(String(e))
+          }}
+        />
+        <div
+          className='flex w-full justify-end mt-1'
+        >
+          <CustomActionButton
+            className='p-0.5'
+            onClick={() => {
+              const filename = `${textName}.txt`
+              console.log("create: ", filename)
+              fs?.writeFile(`${currentPath}/${filename}`, '', (err) => {
+                if (err) console.log(err)
+                else {
+                  console.log('File created', `${currentPath}/${filename}`)
+                }
+              })
+              setIsNewTextNameInputOpen(false)
+              reloadPath()
+            }}
+          >
+            Create
+          </CustomActionButton>
+        </div>
+      </CustomBox>
+    )
+  }
+
+
+
+  const NewFolderInput = () => {
+    const [newFolderName, setNewFolderName] = useState('New Folder')
+    return (
+      <CustomBox
+        tittle='New Text'
+        className='!z-40 w-60 h-36 bg-gray-100 absolute top-1/2 left-1/3 transform -translate-x-1/2 -translate-y-1/2'
+        disableMaximize
+        disableMinimize
+        setClosed={() => {
+          setIsNewFolderNameInputOpen(false)
+        }}
+        closed={!IsNewFolderNameInputOpen}
+      >
+        <CustomInput
+          label='Folder name: '
+          value='New Folder'
+          onChange={(e) => {
+            setNewFolderName(String(e))
+          }}
+        />
+        <div
+          className='flex w-full justify-end mt-1'
+        >
+          <CustomActionButton
+            className='p-0.5'
+            onClick={() => {
+              const foldername = `${newFolderName}`
+              console.log("create: ", foldername)
+              fs?.mkdir(`${currentPath}/${foldername}`, (err) => {
+                if (err) console.log(err)
+                else {
+                  console.log('Folder created', `${currentPath}/${foldername}`)
+                }
+              })
+              setIsNewFolderNameInputOpen(false)
+              reloadPath()
+            }}
+          >
+            Create
+          </CustomActionButton>
+        </div>
+      </CustomBox>
+    )
+  }
+
+  const ConfirmDeleteInput = () => {
+    return (
+      <CustomBox
+        tittle='Confirm Delete'
+        className='!z-40 w-60 h-36 bg-gray-100 absolute top-1/2 left-1/3 transform -translate-x-1/2 -translate-y-1/2'
+        disableMaximize
+        disableMinimize
+        setClosed={() => {
+          setIsConfirmDeleteInputOpen(false)
+        }}
+        closed={!IsConfirmDeleteInputOpen}
+      >
+
+        <div
+          className='flex w-full h-full justify-end mt-1'
+        >
+          <CustomActionButton
+            className='p-0.5'
+            onClick={() => {
+              const deleteItems = [states.Path.selectedItems]
+              console.log("delete: ", deleteItems)
+            }}
+          >
+            Confirm
+          </CustomActionButton>
+        </div>
+      </CustomBox>
+    )
+  }
 
   const [DesktopFiles, setDesktopFiles] = useState<FileItem[]>([])
+  const [IsNewTextNameInputOpen, setIsNewTextNameInputOpen] = useState(false)
+  const [IsNewFolderNameInputOpen, setIsNewFolderNameInputOpen] = useState(false)
+  const [IsConfirmDeleteInputOpen, setIsConfirmDeleteInputOpen] = useState(false)
 
-  // const loadDesktopFolder = async () => {
-  //   let resFiles:FileItem[] = []
-  //   await fs?.readdir('/Desktop', (err, files) => {
-  //     console.log(files)
-  //     console.log(1)
-  //     if (err) console.log(err)
-  //     else {
-  //       files.forEach((file) => {
-  //         resFiles.push({
-  //           path: file,
-  //           isFile: verifyIfIsFile(file),
-  //         })
-  //       })
-  //     }
-  //   })
-  //   console.log(resFiles)
-  // }
-
-  // useEffect(
-  //   () => {
-  //     loadDesktopFolder()
-  //   }
-  // ,[fs])
+  useEffect(() => {
+    fs?.readdir('/', (err, files) => {
+      setDesktopFiles(files.map((file) => {
+        return {
+          path: file,
+          isFile: verifyIfIsFile(file),
+        }
+      }))
+    })
+  }, [states.Path.selectedItems])
 
   return (
     <div
@@ -295,9 +466,10 @@ const Desktop = () => {
         setIsRightMenuOpen(true)
       }}
       onClick={() => {
-
         setIsRightMenuOpen(false)
       }}
+
+
       className='
       w-full h-full flex flex-col
     '
@@ -306,8 +478,23 @@ const Desktop = () => {
         isRightMenuOpen &&
         <MenuContext />
       }
-      {DesktopOpenItems()}
 
+      {
+        IsNewTextNameInputOpen &&
+        <NewTextNameInput />
+      }
+      {
+        IsNewFolderNameInputOpen &&
+        <NewFolderInput />
+      }
+      {
+        IsConfirmDeleteInputOpen &&
+        <ConfirmDeleteInput />
+      }
+
+      {
+        DesktopOpenItems()
+      }
 
       {
         states.Process.items.length > 0 &&
@@ -319,10 +506,6 @@ const Desktop = () => {
           }
         })
       }
-
-
-  
-
 
       <DesktopIcon
         file={'Explorer'}
@@ -337,7 +520,7 @@ const Desktop = () => {
           <DesktopIcon
             img={item.imgSrc}
             deprecated
-            key={index}
+            key={item.text}
             file={item.text}
             pathname={`/`.replaceAll('//', '/')}
             onDoubleClick={() => {
@@ -345,11 +528,45 @@ const Desktop = () => {
             }}
           />
         )
-          })
+      })
+      }
+
+      {
+        DesktopFiles.map((file, index) => {
+          return (
+            <DesktopIcon
+              key={file.path}
+              file={file.path}
+              pathname={`/${file.path}`.replaceAll('//', '/')}
+              onDoubleClick={(filename) => {
+                if (!verifyIfIsFile(filename)) {
+                  dispatch(SystemExplorerSetIsOpen(true))
+                }
+                const itemUuid = uuid(6)
+                if (verifyIfIsFile(file.path)) {
+                  dispatch(ProcessAddProcessItem({
+                    uuid: itemUuid,
+                    name: filename,
+                    title: filename,
+                    path: `/${filename}`.replaceAll('//', '/'),
+                    extension: getExtension(filename),
+                    isOpen: true,
+                    isMinimized: false,
+                  }))
+                  dispatch(ProcessSetProcessItemIsFocused({
+                    uuid: itemUuid,
+                    isFocused: true
+                  }))
+                } else {
+                  setCurrentPath(`/${filename}`.replaceAll('//', '/'))
+                }
+              }}
+            />
+          )
+        })
       }
 
 
-      {/* {loadDesktopFolder()}  */}
 
 
 
@@ -360,7 +577,7 @@ const Desktop = () => {
               uuid={'explorer'}
               tittle='Explorer'
               key={index}
-              className='bg-gray-100 w-5/6 h-4/6'
+              className='bg-gray-100 w-5/6 h-4/6 !z-20'
               closed={!states.System.explorer.isOpen}
               setClosed={() => {
                 dispatch(SystemExplorerSetIsOpen(!states.System.explorer.isOpen))
@@ -397,7 +614,7 @@ const Desktop = () => {
               {path.files.map((file, index) => {
                 return (
                   <DesktopIcon
-                    key={index}
+                    key={file.path}
                     file={file.path}
                     pathname={`${currentPath}/${file.path}`.replaceAll('//', '/')}
                     onDoubleClick={(filename) => {

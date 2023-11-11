@@ -114,7 +114,7 @@ const WindowComponent = ({
         drop-shadow-sm shadow-sm shadow-gray-800 ${className} !overflow-hidden
         ${resize ? 'hover:resize' : ''}
         ${maximized ? ' !w-full !h-full !top-0 !left-0 cursor-auto' : ''}
-        ${isFocused ? ' !z-20' : ''}
+        ${isFocused ? ' !z-30' : ''}
         `}
         onClick={() => {
           dispatch(ProcessSetProcessItemIsFocused({

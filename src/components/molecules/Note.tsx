@@ -13,8 +13,11 @@ import { removeExtension, verifyIfIsFile } from '@/utils/files'
 import wait from '@/utils/wait'
 
 
+type NoteProps = processItemProps & {
+  onSaved?: () => void
+}
 
-const Note = (props:processItemProps) => {
+const Note = (props:NoteProps) => {
 
   const { states,dispatch } = useStore()
   const { fs } = useStorage()
@@ -23,7 +26,6 @@ const Note = (props:processItemProps) => {
   const [isFileMenuOpen, setIsFileMenuOpen] = useState(false)
   const [fileName, setFileName] = useState(removeExtension(props.title) || '')
   const [isSaveAsInputOpen, setIsSaveAsInputOpen] = useState(false)
-  const [rewrite, setRewrite] = useState(false)
 
   const currentPath = states.Path.paths[0].path
 
@@ -141,34 +143,14 @@ const Note = (props:processItemProps) => {
               <CustomActionButton
                 className='p-px px-1'
                 onClick={() => {
-                  const alreadyExist = () => {
-                    let exist = false
-                    states.Path.paths[0].files.forEach(file => {
-                      if(`/${file.path}` === `${currentPath}/${fileName}.txt`.replaceAll('//','/')){
-                        exist = true
-                      }
-                    })
-                    return exist
-                  }
-                  
-                  if(alreadyExist()){
-                    setRewrite(true)
-                  }
-                  if(rewrite){
-                    fs?.writeFile(`${currentPath}/${fileName}.txt`.replaceAll('//','/'), content, (err) => {
+                  fs?.writeFile(`${currentPath}/${fileName}.txt`.replaceAll('//','/'), content, (err) => {
                       if(err) console.log(err)
                     })
-                  }else{
-                    fs?.writeFile(`${currentPath}/${fileName}_new.txt`.replaceAll('//','/'), content, (err) => {
-                      if(err) console.log(err)
-                    })
-                    
-                  }
-                  setRewrite(false)
                   dispatch(ProcessSetProcessItemIsOpen({
                     uuid: props.uuid,
                     isOpen: false
                   }))
+                  props.onSaved && props.onSaved()
                   reloadPath()
                 }}
               >
@@ -198,3 +180,4 @@ const Note = (props:processItemProps) => {
 }
 
 export default Note
+
