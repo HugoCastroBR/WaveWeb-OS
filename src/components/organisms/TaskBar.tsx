@@ -6,7 +6,7 @@ import CustomBox from '../molecules/CustomBox'
 import useStore from '@/hooks/useStore'
 import DesktopIcon from '../molecules/DesktopIcon'
 import TaskBarItem from '../molecules/TaskBarItem'
-import { TasksSetIsMusicTaskOpen, TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskMaximized, SetIsStartMenuOpen, TasksSetIsTodoTaskMinimized, TasksSetIsTodoTaskOpen, TasksSetIsNotePadTaskMinimized, TasksSetIsNotePadTaskOpen, FolderSetIsFolderMinimized, FolderSetIsFolderOpen, ProcessSetProcessItemIsMinimized, SystemExplorerSetIsOpen } from '@/store/actions'
+import { TasksSetIsMusicTaskOpen, TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskMaximized, SetIsStartMenuOpen, TasksSetIsTodoTaskMinimized, TasksSetIsTodoTaskOpen, TasksSetIsNotePadTaskMinimized, TasksSetIsNotePadTaskOpen, FolderSetIsFolderMinimized, FolderSetIsFolderOpen, ProcessSetProcessItemIsMinimized, SystemExplorerSetIsOpen, SystemExplorerSetIsMinimized } from '@/store/actions'
 import { useDisclosure } from '@mantine/hooks'
 import { Drawer } from '@mantine/core'
 import { removeExtension } from '@/utils/files'
@@ -144,10 +144,10 @@ const TaskBar = () => {
         states.System.explorer.isOpen 
         &&
         <TaskBarItem
-        text='My Notes'
+        text='Explorer'
         icon='/assets/icons/folder.png'
         onClick={() => {
-          dispatch(SystemExplorerSetIsOpen(!states.System.explorer.isOpen))
+          dispatch(SystemExplorerSetIsMinimized(!states.System.explorer.isMinimized))
         }}
         />
         }

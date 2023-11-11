@@ -31,14 +31,14 @@ const TodoItem = ({
   const handlePatchTodo = async (done:boolean) => {
     const res = await updateTodo(id, title, content, done)
     handlerLoadTodos()
-    console.log(res)
+    
 
     return res
   }
 
   const handleRemoveTodo = async () => {
     const res = await removeTodo(id)
-    console.log(res)
+    
     handlerLoadTodos()
   }
 

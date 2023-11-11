@@ -26,13 +26,13 @@ const MusicApp = () => {
       dispatch(MusicsSetCurrentSongLength(audio.duration))
       dispatch(MusicsSetSongIsPlaying(true))
       const durationSeconds = audio.duration; // Obtenha a duração em segundos
-      console.log(`Duração da música: ${durationSeconds} segundos`);
+      ;
       dispatch(MusicsSetCurrentSongLength(durationSeconds))
     });
   
     audio.addEventListener('ended', () => {
       // O áudio terminou de tocar
-      console.log('O áudio terminou de tocar');
+      ;
       dispatch(MusicsSetSongIsPlaying(false))
     });
   
@@ -93,7 +93,7 @@ const MusicApp = () => {
   }
 
   useEffect(() => {
-    console.log(states.Musics.musicIndex)
+    
   }, [states.Musics.musicIndex])
 
   return (

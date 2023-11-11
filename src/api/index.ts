@@ -14,7 +14,7 @@ export const uploadMusic = async (song: File, image: File, title: string,artist:
   data.append('image', image, 'image.jpg');
   data.append('title', title);
   data.append('artist', artist);
-  // console.log(formData)
+  // 
 
 
   const response = await fetch(`api/music`, {

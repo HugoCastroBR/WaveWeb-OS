@@ -1,8 +1,9 @@
 'use client'
 import React from 'react'
-import { MantineProvider, Button, Group, createTheme } from '@mantine/core';
+import {  Button,  createTheme } from '@mantine/core';
 import { Provider } from 'react-redux';
 import store from '@/store';
+import ThemeProviders from './ThemeProvider';
 
 interface ProvidersProps {
   children: React.ReactNode
@@ -27,11 +28,9 @@ const Providers = (
 ) => {
   return (
     <Provider store={store}>
-        <MantineProvider theme={theme}>
-          <div className='bg-gradient-to-tl from-pink-500 via-violet-500 to-blue-500'> 
-            {children}
-          </div>
-      </MantineProvider>
+        <ThemeProviders>
+          {children}
+        </ThemeProviders>
     </Provider>
 
 

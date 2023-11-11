@@ -15,6 +15,7 @@ import wait from '@/utils/wait'
 
 type NoteProps = processItemProps & {
   onSaved?: () => void
+  onClick?: () => void
 }
 
 const Note = (props:NoteProps) => {

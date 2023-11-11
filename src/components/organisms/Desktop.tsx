@@ -2,24 +2,21 @@
 import React, { use, useEffect, useState } from 'react'
 import DesktopIcon from '../molecules/DesktopIcon'
 import useStore from '@/hooks/useStore'
-import { FolderSetIsFolderMinimized, FolderSetIsFolderOpen, PathClearSelectedItems, PathSetPath, ProcessAddProcessItem, ProcessSetProcessItemIsFocused, SystemExplorerSetIsOpen, TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskOpen, TasksSetIsNotePadTaskOpen, TasksSetIsTodoTaskMinimized, TasksSetIsTodoTaskOpen } from '@/store/actions'
+import { PathClearSelectedItems, PathSetPath, ProcessAddProcessItem, ProcessSetProcessItemIsFocused, SystemExplorerSetIsMaximized, SystemExplorerSetIsMinimized, SystemExplorerSetIsOpen, TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskOpen, TasksSetIsNotePadTaskOpen, TasksSetIsTodoTaskMinimized, TasksSetIsTodoTaskOpen } from '@/store/actions'
 import MusicApp from './MusicApp'
 import TodoApp from './TodoApp'
 import NotePadApp from './NotePadApp'
-import NoteFolder from './NoteFolder'
 import CustomAlert from './CustomAlert'
 import useStorage from '@/hooks/useStorage'
 import CustomActionButton from '../atoms/CustomActionButton'
-import { getExtension, uuid, verifyIfIsFile } from '@/utils/files'
+import { getExtension, removeExtension, uuid, verifyIfIsFile } from '@/utils/files'
 import CustomBox from '../molecules/CustomBox'
 import RightMenuItem from '../molecules/RightMenuItem'
-import NoContent from '../molecules/NoContent'
 import WindowComponent from '../molecules/WindowComponent'
 import Note from '../molecules/Note'
 import { processItemProps } from '@/store/reducers/process'
 import wait from '@/utils/wait'
 import CustomInput from '../atoms/CustomInput'
-
 
 interface DesktopItemProps {
   onClick?: () => void
@@ -30,15 +27,13 @@ interface DesktopItemProps {
 
 const Desktop = () => {
 
-
   const { fs } = useStorage()
-
+  const { states, dispatch } = useStore()
   // Window Items
   const DesktopOpenItems = () => {
     return (
       <>
         <CustomAlert />
-        {/* <NoteFolder /> */}
         <NotePadApp />
         <TodoApp />
         <MusicApp />
@@ -65,35 +60,17 @@ const Desktop = () => {
         dispatch(TasksSetIsTodoTaskMinimized(false))
       }
     },
-    // {
-    //   imgSrc: '/assets/icons/note-pad-task.png',
-    //   text: 'Notepad',
-    //   onClick() {
-    //     dispatch(TasksSetIsNotePadTaskOpen(true))
-    //     dispatch(TasksSetIsTodoTaskMinimized(false))
-    //   }
-    // },
-    // {
-    //   imgSrc: '/assets/icons/note-folder.png',
-    //   text: 'My Notes',
-    //   onClick() {
-    //     dispatch(FolderSetIsFolderOpen('My Notes', true))
-    //     dispatch(FolderSetIsFolderMinimized('My Notes', false))
-    //   }
-    // },
   ]
-
 
   const [isRightMenuOpen, setIsRightMenuOpen] = useState(false)
   const [x, setX] = useState(0)
   const [y, setY] = useState(0)
 
-
   const reloadPath = async () => {
     await wait(100)
-    console.log('reload')
+    
     await fs?.readdir('/', (err, files) => {
-      console.log("reloading Desktop")
+      
       setDesktopFiles(files.map((file) => {
         return {
           path: file,
@@ -103,7 +80,7 @@ const Desktop = () => {
     })
 
     await fs?.readdir(currentPath, (err, files) => {
-      if (err) console.log(err)
+      if (err)  console.log(err)
       else {
         dispatch(PathSetPath([{
           path: currentPath,
@@ -119,11 +96,7 @@ const Desktop = () => {
   };
 
 
-
-
-
   const MenuContext = () => {
-
 
     return (
       <div
@@ -145,7 +118,6 @@ const Desktop = () => {
           text='New Text File'
           onClick={() => {
             setIsNewTextNameInputOpen(true)
-
             reloadPath()
             dispatch(PathClearSelectedItems())
             fs?.readdir('/', (err, files) => {
@@ -176,23 +148,46 @@ const Desktop = () => {
           }
         />
         <RightMenuItem
+          text='Rename'
+          disabled={states.Path.selectedItems.length !== 1}
+          onClick={() => {
+            // setIsNewFolderNameInputOpen(true)
+            const itempath = `${currentPath}/${states.Path.selectedItems[0]}`.replaceAll('//', '/')
+            setRenameItemName(states.Path.selectedItems[0])
+            setRenameItemPath(itempath)
+            setIsRenameInputOpen(true)
+            // reloadPath()
+            // dispatch(PathClearSelectedItems())
+            // fs?.readdir('/', (err, files) => {
+            //   setDesktopFiles(files.map((file) => {
+            //     return {
+            //       path: file,
+            //       isFile: verifyIfIsFile(file),
+            //     }
+            //   }))
+            // })
+          }
+          }
+        />
+        <RightMenuItem
           text='Delete'
+          disabled={states.Path.selectedItems.length === 0}
           onClick={() => {
             states.Path.selectedItems.forEach((item) => {
               const itemToDelete = `${currentPath}/${item}`.replaceAll('//', '/')
 
               if (verifyIfIsFile(itemToDelete)) {
                 fs?.unlink(itemToDelete, (err) => {
-                  if (err) console.log(err)
+                  if (err)  console.log(err)
                   else {
-                    console.log('Deleted: ' + itemToDelete)
+                    
                   }
                 })
               } else {
                 fs?.rmdir(itemToDelete, (err) => {
-                  if (err) console.log(err)
+                  if (err)  console.log(err)
                   else {
-                    console.log('Deleted: ' + itemToDelete)
+                    
                   }
                 })
               }
@@ -216,14 +211,14 @@ const Desktop = () => {
 
 
 
-  const { states, dispatch } = useStore()
-
+  const [renameItemPath, setRenameItemPath] = useState('')
+  const [renameItemName, setRenameItemName] = useState('')
 
   const [currentPath, setCurrentPath] = useState('/')
 
   const readPath = async (path: string) => {
     fs?.readdir(path, (err, files) => {
-      if (err) console.log(err)
+      if (err)  console.log(err)
       else {
         dispatch(PathSetPath([{
           path,
@@ -238,7 +233,6 @@ const Desktop = () => {
     })
   };
 
-
   const goBack = async () => {
     dispatch(PathClearSelectedItems())
     if (currentPath === '/') {
@@ -250,7 +244,7 @@ const Desktop = () => {
     const parentPath = `/${pathSegments.slice(0, -1).join('/')}`;
 
     fs?.readdir(parentPath, (err, files) => {
-      if (err) {
+      if (err){
         throw err;
       }
       dispatch(PathSetPath([{
@@ -289,13 +283,16 @@ const Desktop = () => {
         }
       }))
     })
-    // console.log("load fs")
+    // 
   }, [fs])
 
   const handlerFileType = (item: processItemProps) => {
     switch (item.extension) {
       case 'txt':
         return <Note
+          onClick={() => {
+            dispatch(PathClearSelectedItems())
+          }}
           {...item}
           icon='/assets/icons/note-pad-task.png'
           onSaved={() => {
@@ -345,12 +342,13 @@ const Desktop = () => {
           <CustomActionButton
             className='p-0.5'
             onClick={() => {
+              dispatch(PathClearSelectedItems())
               const filename = `${textName}.txt`
-              console.log("create: ", filename)
+              
               fs?.writeFile(`${currentPath}/${filename}`, '', (err) => {
-                if (err) console.log(err)
+                if (err)  console.log(err)
                 else {
-                  console.log('File created', `${currentPath}/${filename}`)
+                  
                 }
               })
               setIsNewTextNameInputOpen(false)
@@ -358,6 +356,60 @@ const Desktop = () => {
             }}
           >
             Create
+          </CustomActionButton>
+        </div>
+      </CustomBox>
+    )
+  }
+
+  const RenameItemInput = () => {
+    const [newName, setNewName] = useState(verifyIfIsFile(renameItemName) ? removeExtension(renameItemName) : renameItemName)
+    const extension = getExtension(verifyIfIsFile(renameItemName) ? getExtension(renameItemName) : renameItemName)
+
+    return (
+      <CustomBox
+        tittle='New Text'
+        className='!z-40 w-60 h-36 bg-gray-100 absolute top-1/2 left-1/3 transform -translate-x-1/2 -translate-y-1/2'
+        disableMaximize
+        disableMinimize
+        setClosed={() => {
+          setIsRenameInputOpen(false)
+        }}
+        closed={!IsRenameInputOpen}
+      >
+        <CustomInput
+          label='New name: '
+          value={newName}
+          onChange={(e) => {
+            // setTextName(String(e))
+            setNewName(String(e))
+          }}
+        />
+        <div
+          className='flex w-full justify-end mt-1'
+        >
+          <CustomActionButton
+            className='p-0.5'
+            onClick={() => {
+              const isFile = verifyIfIsFile(renameItemName)
+              let toRenameAs = ''
+              if(isFile){
+                toRenameAs = `${currentPath}/${newName}.${extension}`.replaceAll('//', '/')
+              }else{
+                toRenameAs = `${currentPath}/${newName}`.replaceAll('//', '/')
+              }
+              
+              const toRename = `${currentPath}/${renameItemName}`.replaceAll('//', '/')
+              console.log(toRename,toRenameAs)
+              fs?.rename(toRename, toRenameAs, (err) => {
+                if (err)  console.log(err)
+              })
+              dispatch(PathClearSelectedItems())
+              setIsRenameInputOpen(false)
+              reloadPath()
+            }}
+          >
+            Rename
           </CustomActionButton>
         </div>
       </CustomBox>
@@ -392,12 +444,13 @@ const Desktop = () => {
           <CustomActionButton
             className='p-0.5'
             onClick={() => {
+              dispatch(PathClearSelectedItems())
               const foldername = `${newFolderName}`
-              console.log("create: ", foldername)
+              
               fs?.mkdir(`${currentPath}/${foldername}`, (err) => {
-                if (err) console.log(err)
+                if (err)  console.log(err)
                 else {
-                  console.log('Folder created', `${currentPath}/${foldername}`)
+                  
                 }
               })
               setIsNewFolderNameInputOpen(false)
@@ -431,7 +484,7 @@ const Desktop = () => {
             className='p-0.5'
             onClick={() => {
               const deleteItems = [states.Path.selectedItems]
-              console.log("delete: ", deleteItems)
+              
             }}
           >
             Confirm
@@ -444,8 +497,11 @@ const Desktop = () => {
   const [DesktopFiles, setDesktopFiles] = useState<FileItem[]>([])
   const [IsNewTextNameInputOpen, setIsNewTextNameInputOpen] = useState(false)
   const [IsNewFolderNameInputOpen, setIsNewFolderNameInputOpen] = useState(false)
-  const [IsConfirmDeleteInputOpen, setIsConfirmDeleteInputOpen] = useState(false)
+  const [IsRenameInputOpen, setIsRenameInputOpen] = useState(false)
 
+
+  const [IsConfirmDeleteInputOpen, setIsConfirmDeleteInputOpen] = useState(false)
+  
   useEffect(() => {
     fs?.readdir('/', (err, files) => {
       setDesktopFiles(files.map((file) => {
@@ -491,6 +547,10 @@ const Desktop = () => {
         IsConfirmDeleteInputOpen &&
         <ConfirmDeleteInput />
       }
+      {
+        IsRenameInputOpen &&
+        <RenameItemInput />
+      }
 
       {
         DesktopOpenItems()
@@ -513,14 +573,16 @@ const Desktop = () => {
         onDoubleClick={() => {
           dispatch(SystemExplorerSetIsOpen(true))
         }}
+        native
       />
 
       {DesktopItemProps.map((item, index) => {
         return (
           <DesktopIcon
             img={item.imgSrc}
+            native
             deprecated
-            key={item.text}
+            key={`DesktopIcon${index}`}
             file={item.text}
             pathname={`/`.replaceAll('//', '/')}
             onDoubleClick={() => {
@@ -535,7 +597,8 @@ const Desktop = () => {
         DesktopFiles.map((file, index) => {
           return (
             <DesktopIcon
-              key={file.path}
+              key={`DesktopFile${index}`}
+              uuid={uuid(6)}
               file={file.path}
               pathname={`/${file.path}`.replaceAll('//', '/')}
               onDoubleClick={(filename) => {
@@ -567,24 +630,32 @@ const Desktop = () => {
       }
 
 
-
-
-
+{/*             Explorer App             */}
       {states.Path.paths.map((path, index) => {
         return (
           <>
             <WindowComponent
+              resize
               uuid={'explorer'}
               tittle='Explorer'
-              key={index}
-              className='bg-gray-100 w-5/6 h-4/6 !z-20'
+              key={`explorer${index}`}
+              className='bg-gray-100 w-1/2 h-1/2'
               closed={!states.System.explorer.isOpen}
               setClosed={() => {
                 dispatch(SystemExplorerSetIsOpen(!states.System.explorer.isOpen))
               }}
+              maximized={states.System.explorer.isMaximized}
+              setMaximized={() => {
+                dispatch(SystemExplorerSetIsMaximized(!states.System.explorer.isMaximized))
+              }}
+              minimized={states.System.explorer.isMinimized}
+              setMinimized={() => {
+                dispatch(SystemExplorerSetIsMinimized(!states.System.explorer.isMinimized))
+              }}
+              
             >
               <div className='
-              flex w-full mb-2 h-10 bg-gray-300 items-center 
+              flex w-full mb-2 h-8 bg-gray-300 items-center 
               border-b-2 border-b-gray-800 border-l-2 border-l-gray-100
               border-r-2 border-r-gray-800 border-t-2 border-t-gray-100
               overflow-hidden
@@ -594,31 +665,33 @@ const Desktop = () => {
                     readPath(currentPath)
                   }}
                   className='
-                    w-20 h-12 -ml-1 bg-gray-300
+                    w-20 h-10 -ml-1 bg-gray-300
+                    text-sm font-medium
                   '
                 >
-                  Load
+                  Refresh
                 </CustomActionButton>
                 <CustomActionButton
                   onClick={() => {
                     goBack()
                   }}
                   className='
-                    w-20 h-12 bg-gray-300
+                    w-20 h-10 bg-gray-300
+                    text-sm font-medium
                   '
                 >
                   Go Back
                 </CustomActionButton>
-                <span className='p-1 '>{currentPath}</span>
+                <span className='p-1 text-sm font-medium'>{currentPath}</span>
               </div>
               {path.files.map((file, index) => {
                 return (
                   <DesktopIcon
-                    key={file.path}
+                    key={`path${index}`}
                     file={file.path}
                     pathname={`${currentPath}/${file.path}`.replaceAll('//', '/')}
                     onDoubleClick={(filename) => {
-                      // console.log(`path: ${currentPath}/${filename}`.replaceAll('//','/'))
+                      // )
                       const itemUuid = uuid(6)
                       if (verifyIfIsFile(file.path)) {
                         dispatch(ProcessAddProcessItem({

@@ -141,7 +141,7 @@ const MusicPlayerBar = () => {
             className='w-12 h-12 flex justify-center items-center'
             disabled
             onClick={() => {
-              console.log(states.Musics.musicIndex)
+              
             }}
           >
             <CustomText text='>' className='text-2xl font-semibold' />

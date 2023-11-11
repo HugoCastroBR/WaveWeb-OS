@@ -6,7 +6,7 @@ import Draggable from 'react-draggable';
 import AppTaskBar from './AppTaskBar';
 import Image from 'next/image';
 import useStore from '@/hooks/useStore';
-import { AppSetFocusedItem } from '@/store/actions';
+import { AppSetFocusedItem, ProcessClearFocusedItems } from '@/store/actions';
 
 interface CustomBoxProps {
   children: React.ReactNode
@@ -103,7 +103,7 @@ const CustomBox = ({
         }}
         className={`top-1/4
         bg-gray-300 ${closed && 'hidden'} ${minimized && 'hidden'}
-        z-10
+        z-20
         border-t-2 border-t-gray-100 border-l-2 border-l-gray-100
         border-r-2 border-r-gray-800 border-b-2 border-b-gray-800
         drop-shadow-sm shadow-sm shadow-gray-800 ${className} !overflow-hidden
@@ -117,7 +117,7 @@ const CustomBox = ({
           }else{
             dispatch(AppSetFocusedItem(tittle))
           }
-          
+          dispatch(ProcessClearFocusedItems())
           onClick && onClick()
         }}
       >

@@ -25,7 +25,7 @@ const NewTodoItem = () => {
 
   const handlerAddTodo = async () => {
     const res = await postTodo(title, content)
-    console.log(res)
+    
     setTitle('')
     setContent('')
     handlerLoadTodos()

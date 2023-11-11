@@ -11,12 +11,12 @@ export function playAudioFromUrl(audioUrl: string): number {
   audio.addEventListener('canplaythrough', () => {
     audio.play();
     const durationSeconds = audio.duration; // Obtenha a duração em segundos
-    console.log(`Duração da música: ${durationSeconds} segundos`);
+    ;
   });
 
   audio.addEventListener('ended', () => {
     // O áudio terminou de tocar
-    console.log('O áudio terminou de tocar');
+    ;
   });
 
   audio.addEventListener('error', (e) => {

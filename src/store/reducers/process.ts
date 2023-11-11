@@ -65,6 +65,9 @@ export const ProcessSlice = createSlice({
     SET_PROCESS_ITEM_ICON(state,{payload}:{payload:{uuid:string,icon:string}}){
       const index = state.items.findIndex(item => item.uuid === payload.uuid)
       state.items[index].icon = payload.icon
+    },
+    CLEAR_FOCUSED_ITEMS(state){
+      state.focusedItem = undefined
     }
   }
 });

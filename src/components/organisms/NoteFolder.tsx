@@ -27,9 +27,9 @@ const NoteFolder = () => {
       if(err){
         fs?.mkdir('/My Notes', (err) => {
           if(err){
-            console.log(err)
+            
           }else{
-            console.log('Folder Created')
+            
           }
         })
       }else{
@@ -68,7 +68,7 @@ const NoteFolder = () => {
         updatedAt = formatDateToString(stats?.mtime)
       })
       if(err){
-        console.log(err)
+        
       }else{
         dispatch(NoteSetCurrentNote({
           id: 0,

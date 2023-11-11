@@ -92,7 +92,7 @@ export default function Home() {
               setIsRegisterFormOpen(true)
             }}
             onSubmit={() => {
-              console.log("login")
+              
             }}
           />
         </div>

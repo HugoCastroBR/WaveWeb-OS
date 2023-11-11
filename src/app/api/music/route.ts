@@ -7,14 +7,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST (request:NextRequest) {
   const data = await request.formData()
-  // console.log(data)
-  // console.log(data)
+  // 
+  // 
   const music : File | null = data.get('file') as unknown as File
   const image : File | null = data.get('image') as unknown as File
   const title : string | null = data.get('title') as unknown as string
   const artist : string | null = data.get('artist') as unknown as string
   
-  // console.log(file)
+  // 
 
   if(!music || !image){
     return NextResponse.json('No files received')
@@ -33,7 +33,7 @@ export async function POST (request:NextRequest) {
 
     await writeFile(imagePath,imageBuffer)
     await writeFile(musicPath,musicBuffer)
-    console.log('Files saved at',dir)
+    
 
     try {
       await prisma.musicFile.create({
@@ -46,7 +46,7 @@ export async function POST (request:NextRequest) {
       })
       return NextResponse.json({message:'File saved'})
     } catch (error) {
-      console.log(error)
+      
     }
   }
 

@@ -1,3 +1,4 @@
+import { Process } from './reducers/processInstance';
 
 import { SpotifySearchMusic } from '@/api/spotify';
 import { SystemActions,AppActions,ProcessActions, AuthActions, TasksActions, MusicsActions, TodoActions, FoldersActions, NoteActions, PathActions } from './index';
@@ -71,6 +72,9 @@ export const ProcessSetProcessItemIsFocused = (value: {uuid:string,isFocused:boo
 export const ProcessSetProcessItemIcon = (value: {uuid:string,icon:string}) =>{
   return ProcessActions.SET_PROCESS_ITEM_ICON(value)
 }
+export const ProcessClearFocusedItems = () =>{
+  return ProcessActions.CLEAR_FOCUSED_ITEMS()
+}
 
 
 
@@ -95,7 +99,9 @@ export const AppSetFileMenuOpen = (value: boolean) => {
 export const AppSetAboutMenuOpen = (value: boolean) => {
   return AppActions.SET_ABOUT_MENU_OPEN(value)
 }
-
+export const AppClearFocusedItem = () => {
+  return AppActions.CLEAT_FOCUSED_ITEM()
+}
 
 
 

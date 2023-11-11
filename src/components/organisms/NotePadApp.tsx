@@ -29,9 +29,9 @@ const NotePadApp = () => {
     if (states.Note.isEdit) {
       await fs?.writeFile(`/My Notes/${fileName}`, fileContent, (err) => {
         if(err){
-          console.log(err)
+          
         }else{
-          console.log('File Saved')
+          
         }
       })
       await setIsSaveAsInputOpen(false)
@@ -44,9 +44,9 @@ const NotePadApp = () => {
     } else {
       await fs?.writeFile(`/My Notes/${fileName}.txt`, fileContent, (err) => {
         if(err){
-          console.log(err)
+          
         }else{
-          console.log('File Saved')
+          
         }
       })
       await setIsSaveAsInputOpen(false)
@@ -63,9 +63,9 @@ const NotePadApp = () => {
     // dispatch(NoteSetNotes([...states.Note.Notes.filter(note => note.id !== res.id)]))
     await fs?.unlink(`/My Notes/${fileName}`, (err) => {
       if(err){
-        console.log(err)
+        
       }else{
-        console.log('File Deleted')
+        
       }
     })
     dispatch(NoteSetIsEdit(false))

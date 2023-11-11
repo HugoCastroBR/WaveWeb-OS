@@ -54,5 +54,8 @@ export const AppSlice = createSlice({
 		SET_ABOUT_MENU_OPEN(state,{payload}:{payload:boolean}){
 			state.isAboutMenuOpen = payload
 		},
+		CLEAT_FOCUSED_ITEM(state){
+			state.focusedItem = undefined
+		},
 	},
 });

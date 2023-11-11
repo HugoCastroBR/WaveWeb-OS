@@ -17,6 +17,7 @@ export type MusicProps = {
 }
 
 export type RightMenuItemProps = {
+  disabled?: boolean
   text: string
   onClick: () => void
 }

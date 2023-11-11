@@ -126,7 +126,7 @@ const MusicPlayerContent = ({
   const RenderLocalMusics = ( ) => {
     return(
       localMusics.map((music, index) => {
-        console.log(music)
+        
         return (
           <MySong
             artistName={music.artist}
