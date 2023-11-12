@@ -11,7 +11,7 @@ import useStore from '@/hooks/useStore'
 import { MusicsSetCurrentSong, MusicsSetSongName, MusicsSetArtists, MusicsSetCurrentSongImage, MusicsSetMusicIndex, MusicsSetCurrentSongLength, MusicsSetIsLocal, MusicsSetSongIsPaused, MusicsSetSongIsPlaying } from '@/store/actions'
 import { formatSecondsToMinutes, getMP3Duration } from '@/utils/audio'
 import musics from '../../../public/songs/musics.json'
-import { getMusic, getMusics, uploadMusic, verifyHealth } from '@/api'
+import { getMusic, getMusics, uploadMusic } from '@/api'
 import wait from '@/utils/wait'
 
 

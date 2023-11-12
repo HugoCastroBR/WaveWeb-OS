@@ -42,6 +42,11 @@ interface WindowComponentProps {
   aboutMenuIsOpen?: boolean
   closeAboutMenu?: (is:boolean) => void
   onMouseOver?: (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+  renameOption?: boolean
+  onRename?: () => void
+  setAsWallpaperOption?: boolean
+  onSetAsWallpaper?: () => void
+  onMouseEnter?: (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }
 const WindowComponent = ({
   uuid,
@@ -77,6 +82,11 @@ const WindowComponent = ({
   aboutMenuIsOpen,
   closeAboutMenu,
   onMouseOver,
+  renameOption,
+  onRename,
+  setAsWallpaperOption,
+  onSetAsWallpaper,
+  onMouseEnter
 }: WindowComponentProps) => {
 
   const {states, dispatch} = useStore()
@@ -105,6 +115,9 @@ const WindowComponent = ({
       <div
         onMouseOver={(e) => {
           onMouseOver && onMouseOver(e)
+        }}
+        onMouseEnter={(e) => {
+          onMouseEnter && onMouseEnter(e)
         }}
         className={`top-1/4
         bg-gray-300 ${closed && 'hidden'} ${minimized && 'hidden'}
@@ -165,6 +178,14 @@ const WindowComponent = ({
           closeFileMenu={closeFileMenu}
           aboutMenuIsOpen={aboutMenuIsOpen}
           closeAboutMenu={closeAboutMenu}
+          renameOption={renameOption}
+          setAsWallpaperOption={setAsWallpaperOption}
+          onSetAsWallpaper={() => {
+            onSetAsWallpaper && onSetAsWallpaper()
+          }}
+          onRename={() => {
+            onRename && onRename()
+          }}
           onRefresh={() => {
             onRefresh && onRefresh()
           }}

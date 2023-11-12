@@ -19,6 +19,10 @@ interface AppTaskBarProps {
   closeFileMenu?: (is:boolean) => void
   aboutMenuIsOpen?: boolean
   closeAboutMenu?: (is:boolean) => void
+  renameOption?: boolean
+  onRename?: () => void
+  setAsWallpaperOption?: boolean
+  onSetAsWallpaper?: () => void
 }
 const AppTaskBar = ({
   onSave,
@@ -35,6 +39,10 @@ const AppTaskBar = ({
   closeAboutMenu,
   fileMenuIsOpen,
   aboutMenuIsOpen,
+  renameOption,
+  onRename,
+  setAsWallpaperOption,
+  onSetAsWallpaper
 }: AppTaskBarProps) => {
 
  
@@ -162,6 +170,40 @@ const AppTaskBar = ({
               />
             </CustomActionButton>
           }
+          {
+            renameOption &&
+            <CustomActionButton
+              className='!justify-start mt-px'
+              onClick={() => {
+                if (onRename) {
+                  onRename()
+                }
+              }}
+            >
+              <CustomText
+                text='Rename'
+                className='text-sm text-start'
+              />
+            </CustomActionButton>
+          }
+          {
+            setAsWallpaperOption &&
+            <CustomActionButton
+              className='!justify-start mt-px'
+              onClick={() => {
+                if (onSetAsWallpaper) {
+                  onSetAsWallpaper()
+                }
+              }}
+            >
+              <CustomText
+                text='Set as wallpaper'
+                className='text-sm text-start'
+              />
+            </CustomActionButton>
+          }
+
+          
         </div>
       }
       {

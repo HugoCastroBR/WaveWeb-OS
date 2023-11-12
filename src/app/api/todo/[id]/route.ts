@@ -1,5 +1,4 @@
 import { prisma } from "@/server/prisma"
-import { TodoProps } from "@/store/reducers/todo"
 import { NextResponse } from "next/server"
 
 export async function DELETE(req:Request,context : {params:{id:string}}) {

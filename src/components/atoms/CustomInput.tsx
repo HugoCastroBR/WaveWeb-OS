@@ -8,6 +8,7 @@ interface CustomInputProps {
   type?: string,
   value?: string
   accept?: string
+  onBlur?: (value:string) => void
 }
 
 const CustomInput = ({
@@ -16,7 +17,8 @@ const CustomInput = ({
   onChange,
   type,
   value,
-  accept
+  accept,
+  onBlur
 }:CustomInputProps) => {
 
   const [inputValue, setInputValue] = React.useState(value || '')
@@ -60,6 +62,9 @@ const CustomInput = ({
       type={type || 'text'}
       id={`text-input-${label}`}
       value={inputValue}
+      onBlur={(e) => {
+        onBlur && onBlur(e.target.value)
+      }}
       className={`
       border-2 flex flex-col bg-gray-200 
       border-t-gray-800  border-l-gray-800

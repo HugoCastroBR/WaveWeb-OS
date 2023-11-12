@@ -1,9 +1,56 @@
 import { TodoProps } from "@/store/reducers/todo"
 
-const url = 'http://localhost:3333'
 
-export const verifyHealth = async () => {
-  const response = await fetch(`${url}/health`)
+export const uploadPicture = async (image: File, title: string) => {
+  const data = new FormData();
+  data.append('image', image);
+  data.append('title', title);
+
+  const response = await fetch(`api/pictures`, {
+    method: 'POST',
+    body: data
+  });
+  console.log(response)
+  if (response.ok) {
+    const data = await response.json();
+    return data;
+  } else {
+    throw new Error(`Erro no envio da imagem: ${response.status}`);
+  }
+}
+
+
+export type getPicture = {
+  id: number;
+  title: string;
+  imageUrl: string;
+  createdAt: string;
+  updatedAt: string;
+}
+export const getPictures = async ():Promise<getPicture[]> => {
+  const response = await fetch(`api/pictures`)
+  const data = await response.json()
+  return data
+}
+
+export const deletePicture = async (id:number) => {
+  const response = await fetch(`api/pictures/${id}`,{
+    method:'DELETE',
+  })
+  const data = await response.json()
+  return data
+}
+
+export const renamePicture = async (item:getPicture) => {
+  const response = await fetch(`api/pictures/${item.id}`,{
+    method:'PATCH',
+    headers:{
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify({
+      ...item
+    })
+  })
   const data = await response.json()
   return data
 }

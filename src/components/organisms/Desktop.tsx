@@ -2,7 +2,7 @@
 import React, { use, useEffect, useState } from 'react'
 import DesktopIcon from '../molecules/DesktopIcon'
 import useStore from '@/hooks/useStore'
-import { PathClearSelectedItems, PathSetPath, ProcessAddProcessItem, ProcessSetProcessItemIsFocused, SystemExplorerSetIsMaximized, SystemExplorerSetIsMinimized, SystemExplorerSetIsOpen, TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskOpen, TasksSetIsNotePadTaskOpen, TasksSetIsTodoTaskMinimized, TasksSetIsTodoTaskOpen } from '@/store/actions'
+import { GalleryAppSetIsMinimized, GalleryAppSetIsOpen, PathClearSelectedItems, PathSetPath, ProcessAddProcessItem, ProcessSetProcessItemIsFocused, SystemExplorerSetIsMaximized, SystemExplorerSetIsMinimized, SystemExplorerSetIsOpen, TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskOpen, TasksSetIsNotePadTaskOpen, TasksSetIsTodoTaskMinimized, TasksSetIsTodoTaskOpen } from '@/store/actions'
 import MusicApp from './MusicApp'
 import TodoApp from './TodoApp'
 import NotePadApp from './NotePadApp'
@@ -17,6 +17,7 @@ import Note from '../molecules/Note'
 import { processItemProps } from '@/store/reducers/process'
 import wait from '@/utils/wait'
 import CustomInput from '../atoms/CustomInput'
+import GalleryApp from './GalleryApp'
 
 interface DesktopItemProps {
   onClick?: () => void
@@ -33,6 +34,7 @@ const Desktop = () => {
   const DesktopOpenItems = () => {
     return (
       <>
+        <GalleryApp />
         <CustomAlert />
         <NotePadApp />
         <TodoApp />
@@ -60,6 +62,14 @@ const Desktop = () => {
         dispatch(TasksSetIsTodoTaskMinimized(false))
       }
     },
+    {
+      imgSrc:'/assets/icons/image-app.png',
+      text:'Gallery',
+      onClick() {
+        dispatch(GalleryAppSetIsOpen(true))
+        dispatch(GalleryAppSetIsMinimized(false))
+      },
+    }
   ]
 
   const [isRightMenuOpen, setIsRightMenuOpen] = useState(false)

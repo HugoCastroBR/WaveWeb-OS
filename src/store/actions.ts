@@ -1,5 +1,3 @@
-import { Process } from './reducers/processInstance';
-
 import { SpotifySearchMusic } from '@/api/spotify';
 import { SystemActions,AppActions,ProcessActions, AuthActions, TasksActions, MusicsActions, TodoActions, FoldersActions, NoteActions, PathActions } from './index';
 import { TodoProps } from './reducers/todo';
@@ -19,6 +17,9 @@ export const SystemExplorerSetIsMaximized = (value: boolean) => {
 }
 export const SystemExplorerSetIcon = (value: string) => {
   return SystemActions.SET_EXPLORER_ICON(value)
+}
+export const SystemOsSetBackground = (value: string) => {
+  return SystemActions.SET_OS_BACKGROUND(value)
 }
 
 
@@ -237,4 +238,17 @@ export const NoteSetCurrentNote = (value: NoteProps) => {
 }
 export const NoteSetIsEdit = (value: boolean) => {
   return NoteActions.SET_IS_EDIT(value)
+}
+
+export const GalleryAppSetIsOpen = (value: boolean) => {
+  return SystemActions.SET_GALLERY_IS_OPEN(value)
+}
+export const GalleryAppSetIsMinimized = (value: boolean) => {
+  return SystemActions.SET_GALLERY_IS_MINIMIZED(value)
+}
+export const GalleryAppSetIsMaximized = (value: boolean) => {
+  return SystemActions.SET_GALLERY_IS_MAXIMIZED(value)
+}
+export const GalleryAppSetIcon = (value: string) => {
+  return SystemActions.SET_GALLERY_ICON(value)
 }

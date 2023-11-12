@@ -6,7 +6,7 @@ import CustomBox from '../molecules/CustomBox'
 import useStore from '@/hooks/useStore'
 import DesktopIcon from '../molecules/DesktopIcon'
 import TaskBarItem from '../molecules/TaskBarItem'
-import { TasksSetIsMusicTaskOpen, TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskMaximized, SetIsStartMenuOpen, TasksSetIsTodoTaskMinimized, TasksSetIsTodoTaskOpen, TasksSetIsNotePadTaskMinimized, TasksSetIsNotePadTaskOpen, FolderSetIsFolderMinimized, FolderSetIsFolderOpen, ProcessSetProcessItemIsMinimized, SystemExplorerSetIsOpen, SystemExplorerSetIsMinimized } from '@/store/actions'
+import { TasksSetIsMusicTaskOpen, TasksSetIsMusicTaskMinimized, TasksSetIsMusicTaskMaximized, SetIsStartMenuOpen, TasksSetIsTodoTaskMinimized, TasksSetIsTodoTaskOpen, TasksSetIsNotePadTaskMinimized, TasksSetIsNotePadTaskOpen, FolderSetIsFolderMinimized, FolderSetIsFolderOpen, ProcessSetProcessItemIsMinimized, SystemExplorerSetIsOpen, SystemExplorerSetIsMinimized, GalleryAppSetIsMinimized } from '@/store/actions'
 import { useDisclosure } from '@mantine/hooks'
 import { Drawer } from '@mantine/core'
 import { removeExtension } from '@/utils/files'
@@ -152,6 +152,16 @@ const TaskBar = () => {
         />
         }
         {
+        states.System.gallery.isOpen
+        &&
+        <TaskBarItem
+        text='Gallery'
+        icon='/assets/icons/image-app.png'
+        onClick={() => {
+          dispatch(GalleryAppSetIsMinimized(!states.System.gallery.isMinimized))
+        }}/>
+        }
+        {
         states.Tasks.MusicTask.isOpen 
         && 
         <TaskBarItem 
@@ -175,6 +185,7 @@ const TaskBar = () => {
         icon={states.Tasks.NotePadTask.icon}
         onClick={HandlerOnClick} />
         }
+
         
       </div>
       <CustomActionButton className='w-16  h-8 flex justify-center pr-1' >

@@ -66,9 +66,9 @@ const CustomActionButton = ({
       border-t-2 border-t-gray-100 border-l-2 border-l-gray-100
       border-r-2 border-r-gray-800 border-b-2 border-b-gray-800
       justify-center items-center
-      duration-100 ease-in-out transform 
+      duration-200 ease-in-out transform transition-all
       focus:outline-none  
-      ${clicked && "border-t-gray-800 border-l-gray-800 border-r-gray-100 border-b-gray-100"}
+      ${clicked && "border-t-gray-800 border-l-gray-800 !border-r-gray-100 !border-b-gray-100"}
       `}
       onClick={(e) => {
         e.preventDefault()

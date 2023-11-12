@@ -21,7 +21,7 @@ export async function POST (request:NextRequest) {
   }else{
     const random = Math.random().toString(36).substring(7)
     const dir = `./public/songs/${random}`
-    await mkdir(dir)
+    // await mkdir(dir) // This is for the first use
 
     const musicBytes = await music.arrayBuffer()
     const musicBuffer = Buffer.from(musicBytes)
