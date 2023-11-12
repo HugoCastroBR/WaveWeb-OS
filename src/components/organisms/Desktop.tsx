@@ -18,6 +18,7 @@ import { processItemProps } from '@/store/reducers/process'
 import wait from '@/utils/wait'
 import CustomInput from '../atoms/CustomInput'
 import GalleryApp from './GalleryApp'
+import Image from 'next/image'
 
 interface DesktopItemProps {
   onClick?: () => void
@@ -111,10 +112,10 @@ const Desktop = () => {
     return (
       <div
         className={`
-        bg-gray-500 
+        bg-gray-300 
           drop-shadow-md shadow-md shadow-gray-800 
           flex flex-col w-40 z-40  
-          bg-opacity-5 backdrop-filter backdrop-blur-sm
+          bg-opacity-20 backdrop-filter backdrop-blur-sm
           py-2
       `}
         style={{
@@ -534,12 +535,22 @@ const Desktop = () => {
       onClick={() => {
         setIsRightMenuOpen(false)
       }}
-
-
-      className='
+      className={`
       w-full h-full flex flex-col
-    '
+      
+    `}
     >
+      {
+        states.System.OS.background &&
+        <Image
+          src={`/${states.System.OS.background}`}
+          alt='background'
+          layout='fill'
+          objectFit='cover'
+          quality={100}
+          priority
+        />
+      }
       {
         isRightMenuOpen &&
         <MenuContext />
