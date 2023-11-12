@@ -88,7 +88,7 @@ const DesktopIcon = ({
     >
       <div
         className={`
-        flex flex-col w-20 h-24 justify-center items-center m-px cursor-pointer z-20
+        flex flex-col w-20 h-24 justify-center items-center cursor-pointer z-20
         ${isSelect ? 'bg-gray-100' : 'bg-transparent'}
         ${isDragging ? 'opacity-50 cursor-move backdrop-filter backdrop-blur-sm bg-gray-100' : 'opacity-100'}
       `}
@@ -118,13 +118,14 @@ const DesktopIcon = ({
         `}
         >
           <CustomText
-            className='text-base -mt-0 font-semibold text-gray-800 break-words text-start w-full'
+            className='text-base -mt-0 font-semibold text-gray-500 break-words text-start w-full'
             text={`${file.length > 70 ? file.slice(0, 70) + '...' : file}`}
           />
         </div>
         <Image src={deprecated ? img : imgSrc} width={52} height={52} alt={`${file}`} />
         <CustomText
-          className='text-sm -mt-0 font-semibold text-gray-800 break-words text-center w-20'
+          className='text-sm -mt-0 font-semibold text-slate-500
+          break-words text-center w-20'
           text={`${file.length > 12 ? file.slice(0, 12) + '...' : file}`}
         />
       </div>

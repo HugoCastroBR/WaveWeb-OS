@@ -198,6 +198,14 @@ const GalleryApp = () => {
   }    
 
   const handlerSetAsWallpaper = async (url:string) => {
+    // const image = await fetch(url)
+    // const res = await image.blob()
+    // const reader = new FileReader()
+    // reader.readAsDataURL(res)
+    // reader.onloadend = () => {
+    //   const base64data = reader.result
+    //   localStorage.setItem('wallpaper', String(base64data))
+    // }
     dispatch(SystemOsSetBackground(url))
   }
 

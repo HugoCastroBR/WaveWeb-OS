@@ -19,6 +19,7 @@ import wait from '@/utils/wait'
 import CustomInput from '../atoms/CustomInput'
 import GalleryApp from './GalleryApp'
 import Image from 'next/image'
+import BrowserApp from './BrowserApp'
 
 interface DesktopItemProps {
   onClick?: () => void
@@ -31,10 +32,17 @@ const Desktop = () => {
 
   const { fs } = useStorage()
   const { states, dispatch } = useStore()
+  const [wallpaper, setWallpaper] = useState('')
+
+  useEffect(() => {
+    const wallpaper64 = localStorage.getItem('wallpaper')
+    setWallpaper(wallpaper64)
+  }, [])
   // Window Items
   const DesktopOpenItems = () => {
     return (
       <>
+        {/* <BrowserApp /> */}
         <GalleryApp />
         <CustomAlert />
         <NotePadApp />
@@ -541,9 +549,18 @@ const Desktop = () => {
     `}
     >
       {
-        states.System.OS.background &&
+        states.System.OS.background ?
         <Image
           src={`/${states.System.OS.background}`}
+          alt='background'
+          layout='fill'
+          objectFit='cover'
+          quality={100}
+          priority
+        />
+        :
+        <Image
+          src={`/pictures/2641074.gif`}
           alt='background'
           layout='fill'
           objectFit='cover'
